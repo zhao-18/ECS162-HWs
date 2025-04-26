@@ -1,0 +1,342 @@
+/*
+ * This file contains styling for the main
+ *
+ * The main section has three columns, two dedicated for news and one dedicated for editorial.
+ * Components are stacked on top of each other, using flex. Width of each component are decided
+ * using grid system.
+ *
+ * In news section, there are three different style that was observed in nyt home page.
+ * - Section that has large image and text, with light vertical line in between
+ * - Section that has large image and text, with no vertical line in between
+ * - Section with two equal sized subsections that may or may not contain image.
+ *
+ * Each component are styled in its own section of this file
+ *
+ * When the screen get smaller, first the editorial section wil be moved to the bottom of the page.
+ * If the width get even smaller, sections in news part will move its right component to the top
+ * and left component to the bottom.
+ */
+
+/* Font */
+@font-face {
+  font-family: nyt-cheltenham;
+  src: url(../assets/nyt-cheltenham.ttf);
+}
+
+body {
+  max-width: 1200px;
+  width: 95%;
+  margin: auto;
+  font-size: 14px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* LETTERS STYLING BEGIN */
+#news p {
+  color: rgb(90, 90, 90);
+  font-family: nyt-imperial, georgia, "times new roman", times, Songti SC, simsun, serif;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0;
+}
+
+#news h1,
+#news h2,
+#news h3 {
+  width: 95%;
+  margin: 0;
+  font-weight: 700;
+  font-family: nyt-cheltenham, cheltenham-fallback-georgia, cheltenham-fallback-noto, georgia, 'times new roman', times, serif;
+}
+
+#headlines p {
+  width: 95%;
+}
+
+#headlines h1 {
+  font-size: 30px;
+}
+
+#headlines h2 {
+  font-size: 20px;
+}
+
+#headlines h3 {
+  font-size: 16px;
+}
+
+#breaking {
+  margin: auto;
+}
+
+#news .citation {
+  color: rgb(114, 114, 114);
+  font-family: nyt-franklin, helvetica, arial, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  text-align: right;
+}
+
+#news .article-length {
+  color: rgb(114, 114, 114);
+  font-family: nyt-franklin, helvetica, arial, sans-serif;
+  font-size: 10px;
+}
+/* LETTERS STYLING END */
+
+/* SECTIONING BEGIN */
+#news {
+  display: grid;
+  grid-template-columns: 28% 5% 3% 34% 3% 25% 1% 1%;
+  grid-template-areas:
+        "head head head head divider sub sub sub";
+}
+
+#headlines {
+  grid-area: head;
+  display: flex;
+  flex-direction: column;
+}
+
+#news-divider {
+  grid-area: divider;
+}
+/* SECTIONING END */
+
+/* LIVE STATUS BEGIN */
+#live-stat {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 35em;
+  margin: auto;
+  font-size: 11px;
+}
+/* LIVE STATUS END */
+
+/* NEWS SECTION WITH LINE IN THE CENTER BEGIN */
+.news-equal {
+  display: grid;
+  grid-template-columns: 46% 4% 50%;
+  grid-column: span 4;
+  gap: 10px;
+  grid-template-areas: "left divider right";
+}
+
+.news-equal img {
+  width: 93%;
+}
+
+.news-equal > .left {
+  grid-area: left;
+  display: flex;
+  flex-direction: row;
+}
+
+.news-equal > .vline-med {
+  grid-area: divider;
+}
+
+.news-equal > .hline-light-vspace {
+  display: none;
+}
+
+.news-equal > .right {
+  grid-area: right;
+  display: flex;
+  flex-direction: row;
+}
+
+.news-equal img {
+  max-height: 8em;
+  width: auto;
+  margin-right: 1.5em;
+}
+/* NEWS SECTION WITH LINE IN THE CENTER END */
+
+/* NEWS SECTION WITHOUT LINE BEGIN */
+.news-head-no-line {
+  display: grid;
+  grid-template-columns: 35% 65%;
+  gap: 15px;
+  grid-template-areas: "left right";
+}
+
+.news-head-no-line > .left {
+  grid-area: left;
+}
+
+.news-head-no-line > .right {
+  grid-area: right;
+  width: 93%;
+}
+
+.news-head-no-line img {
+  width: 96%;
+}
+/* NEWS SECTION WITHOUT LINE END*/
+
+/* NEWS SECTION WITH LINE BEGIN */
+.news-head-line {
+  display: grid;
+  grid-template-columns: 33% 4% 63%;
+  gap: 15px;
+  grid-template-areas: "left divider right";
+}
+
+.news-head-line > .left {
+  grid-area: left;
+}
+
+.news-head-line > .vline-med {
+  grid-area: divider;
+}
+
+.news-head-line > .right {
+  grid-area: right;
+  width: 93%;
+}
+
+.news-head-line img {
+  width: 95%;
+}
+/* NEWS SECTION WITH LINE END */
+
+/* EDITORIALS BEGIN */
+#editorials {
+  grid-area: sub;
+  display: flex;
+  flex-direction: column;
+}
+
+#editorials h2 {
+  color: rgb(18, 18, 18);
+  font-family: nyt-cheltenham-text-cond, nyt-cheltenham, cheltenham-fallback-georgia, cheltenham-fallback-noto, georgia, "times new roman", times, serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+#editorials #featured {
+  color: rgb(18, 18, 18);
+  font-family: serif;
+  font-size: 24px;
+  font-weight: 300
+}
+
+#editorials > .section-name {
+  color: rgb(18, 18, 18);
+  font-family: nyt-franklin, serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+/* EDITORIALS END */
+
+/* TABLET */
+@media only screen and (max-width: 1024px) {
+  #headlines {
+    grid-area: 1 / span 6;
+  }
+  #editorials {
+    grid-area: 2 / span 6;
+  }
+  #news-divider {
+    display: none;
+  }
+}
+
+/* PHONE */
+@media only screen and (max-width: 768px) {
+  .news-head-no-line > .right {
+    grid-area: 1 / span 6;
+  }
+  .news-head-no-line > .left {
+    grid-area: 2 / span 6;
+  }
+
+  .news-head-line > .right {
+    grid-area: 1 / span 6;
+  }
+  .news-head-line > .left {
+    grid-area: 2 / span 6;
+  }
+  .news-head-line > .vline-med {
+    display: none;
+  }
+
+  .news-equal > .right {
+    grid-area: 1 / span 6;
+  }
+  .news-equal > .left {
+    grid-area: 3 / span 6;
+  }
+  .news-equal > .vline-med {
+    display: none;
+  }
+  .news-equal > .hline-light-vspace {
+    grid-area: 2 / span 3;
+    display: flex;
+  }
+
+  /* Prevent letter from going out of bound */
+  #headlines p {
+    width: 90%;
+  }
+}
+
+/* DIVIDERS BEGIN */
+
+.hline {
+  width: 100%;
+  margin: 1px;
+  border-bottom: black solid 1px;
+}
+
+.vspace {
+  height: 15px;
+}
+
+.hline-vspace {
+  width: 100%;
+  margin: 20px auto;
+  border-bottom: black solid 1px;
+}
+
+.hline-light {
+  width: 100%;
+  margin: 1px auto;
+  border-bottom: #e0e0e0 solid 2px;
+}
+
+.hline-light-vspace {
+  width: 100%;
+  margin: 20px auto;
+  border-bottom: #e0e0e0 solid 2px;
+}
+
+.vline-med {
+  height: 100%;
+  width: 0;
+  margin: 1px auto;
+  border-left: lightgray solid 1px;
+}
+
+.vline-light {
+  height: 100%;
+  margin: 1px;
+  border-left: #e0e0e0 solid 1px;
+}
+
+.gray {
+  color: #5a5a5a;
+}
+
+.lightgray {
+  color: #999;
+}
+
+/* DIVIDERS END */
