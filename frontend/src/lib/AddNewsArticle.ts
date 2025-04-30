@@ -16,11 +16,7 @@ function addFeaturedNews(headlines: HTMLElement, article, subarticle = null) : v
     abstract.textContent = article.abstract;
     left.appendChild(abstract);
 
-    const length = document.createElement("p");
-    const wc = parseInt(article.word_count);
-    length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length.classList.add("article-length");
-    left.appendChild(length);
+    addArticleLength(left, article.word_count);
 
     if (subarticle !== null) {
         const divider = document.createElement("div");
@@ -35,11 +31,7 @@ function addFeaturedNews(headlines: HTMLElement, article, subarticle = null) : v
         abstract.textContent = subarticle.abstract;
         left.appendChild(abstract);
 
-        const length = document.createElement("p");
-        const wc = parseInt(subarticle.word_count);
-        length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-        length.classList.add("article-length");
-        left.appendChild(length);
+        addArticleLength(left, subarticle.word_count);
     }
 
     const right = document.createElement("div");
@@ -82,11 +74,7 @@ function addHeadLineNoLine(headlines: HTMLElement, article) : void {
     abstract.textContent = article.abstract;
     left.appendChild(abstract);
 
-    const length = document.createElement("p");
-    const wc = parseInt(article.word_count);
-    length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length.classList.add("article-length");
-    left.appendChild(length);
+    addArticleLength(left, article.word_count);
 
     const right = document.createElement("div");
     right.classList.add("right");
@@ -129,11 +117,7 @@ function addHeadLineWithLine(headlines: HTMLElement, article_left, article_right
     abstract_left.textContent = article_left.abstract;
     left.appendChild(abstract_left);
 
-    const length_left = document.createElement("p");
-    const wc = parseInt(article_left.word_count);
-    length_left.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length_left.classList.add("article-length");
-    left.appendChild(length_left);
+    addArticleLength(left, article_left.word_count);
 
     const right = document.createElement("div");
     right.classList.add("right");
@@ -160,11 +144,7 @@ function addHeadLineWithLine(headlines: HTMLElement, article_left, article_right
     abstract_right.textContent = article_right.abstract;
     right.appendChild(abstract_right);
 
-    const length_right = document.createElement("p");
-    const wc_right = parseInt(article_right.word_count);
-    length_right.textContent = `${Math.round(wc_right / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length_right.classList.add("article-length");
-    right.appendChild(length_right);
+    addArticleLength(right, article_right.word_count);
 
     const line = document.createElement("div");
     line.classList.add("vline-med");
@@ -183,11 +163,7 @@ function addHeadLineWithLine(headlines: HTMLElement, article_left, article_right
             headline.textContent = subarticles_left[i].headline.main;
             left.appendChild(headline);
 
-            const length = document.createElement("p");
-            const wc = parseInt(subarticles_left[i].word_count);
-            length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-            length.classList.add("article-length");
-            left.appendChild(length);
+            addArticleLength(left, subarticles_left[i].word_count);
         }
     }
 }
@@ -225,11 +201,7 @@ function addHeadLineCenterLine(headlines: HTMLElement, article_left, article_rig
     headline_left.textContent = article_left.headline.main;
     headline_container_left.appendChild(headline_left);
 
-    const length_left = document.createElement("p");
-    const wc = parseInt(article_left.word_count);
-    length_left.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length_left.classList.add("article-length");
-    headline_container_left.appendChild(length_left);
+    addArticleLength(headline_container_left, article_left.word_count);
 
     const right = document.createElement("div");
     right.classList.add("right");
@@ -255,11 +227,7 @@ function addHeadLineCenterLine(headlines: HTMLElement, article_left, article_rig
     headline_right.textContent = article_right.headline.main;
     headline_container_right.appendChild(headline_right);
 
-    const length_right = document.createElement("p");
-    const wc_right = parseInt(article_right.word_count);
-    length_right.textContent = `${Math.round(wc_right / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length_right.classList.add("article-length");
-    headline_container_right.appendChild(length_right);
+    addArticleLength(headline_container_right, article_right.word_count);
 
     const line = document.createElement("div");
     line.classList.add("vline-med");
@@ -270,4 +238,13 @@ function addHeadLineCenterLine(headlines: HTMLElement, article_left, article_rig
     container.appendChild(left);
     container.appendChild(line);
     container.appendChild(right);
+}
+
+function addArticleLength(parent: HTMLDivElement, wordCount: string): void {
+    const length = document.createElement("p");
+    parent.appendChild(length);
+
+    const wc = parseInt(wordCount);
+    length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
+    length.classList.add("article-length");
 }
