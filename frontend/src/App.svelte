@@ -1,9 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  // To be removed once backend is complete
-  import nyt_response from './assets/NYTAPI_output.json' with { type: 'json' };
-
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
   import {addFeaturedEditorial, addEditorial} from "./lib/addEditorialArticle";
@@ -95,17 +92,14 @@
 <main>
   <section id="news">
     <!--        News, on left two column-->
-    <div id="headlines" bind:this={headlines}>
-    </div>
+    <div id="headlines" bind:this={headlines}></div>
     <!--            News end-->
 
     <!--            Divider between news and editorial-->
     <div id="news-divider"><div class="vline-med"></div></div>
 
     <!--            Editorial, on right column-->
-    <div id="editorials" bind:this={editorials}>
-      <div class="vspace"></div>
-    </div>
+    <div id="editorials" bind:this={editorials}></div>
     <!--            Editorial end-->
   </section>
   <div class="vspace"></div>

@@ -1,11 +1,6 @@
 export {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine}
 
 function addFeaturedNews(headlines: HTMLElement, article, subarticle = null) : void {
-    const featured_headline = document.createElement("h1");
-    featured_headline.id = 'breaking';
-    featured_headline.textContent = article.headline.main;
-    headlines.appendChild(featured_headline);
-
     const container = document.createElement("div");
     container.classList.add("news-head-no-line");
     headlines.appendChild(container);
