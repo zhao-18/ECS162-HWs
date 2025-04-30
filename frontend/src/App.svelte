@@ -9,29 +9,22 @@
   import {addFeaturedEditorial, addEditorial} from "./lib/addEditorialArticle";
   import {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine} from "./lib/AddNewsArticle";
 
-  // Get API key
-  let apiKey: string = '';
-
   // DOM elements to add news in
   let headlines : HTMLElement;
   let editorials : HTMLElement;
 
   onMount(async () => {
-    try {
-      const res = await fetch('/api/key');
-      const data = await res.json();
-      apiKey = data.apiKey;
-    } catch (error) {
-      console.error('Failed to fetch API key:', error);
-    }
-
     await load_articles();
   });
 
   async function load_articles(): Promise<void> {
     // TODO call backend
-    // const data = await fetch('/api/nyt');
-    // const nyt_response = await res.json();
+    const data = await fetch('/api/news');
+    if (!data.ok) {
+      console.error("Response was not ok: " + data);
+      return;
+    }
+    const nyt_response = (await data.json()).response.docs;
 
     let is_first_news = true;
     let is_first_editorial = true;
