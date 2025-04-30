@@ -19,7 +19,7 @@
     <!--masthead begin-->
     <div id="masthead">
         <div id="date">
-            <p>Monday, April 7, 2025</p>
+            <p>{getCurrentDate()}</p>
             <a href="#">Today's Paper</a>
         </div>
 
@@ -65,3 +65,12 @@
     <div class="hline"></div>
     <div class="vspace"></div>
 </header>
+
+<script lang="ts">
+    function getCurrentDate(){
+        const today = new Date();
+        return today.toLocaleDateString('en-US', {
+            weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+        })
+    }
+</script>
