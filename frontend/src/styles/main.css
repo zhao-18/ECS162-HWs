@@ -48,14 +48,14 @@ main {
 #news h1,
 #news h2,
 #news h3 {
-  width: 95%;
+  max-width: 95%;
   margin: 0;
   font-weight: 700;
   font-family: nyt-cheltenham, cheltenham-fallback-georgia, cheltenham-fallback-noto, georgia, 'times new roman', times, serif;
 }
 
 #headlines p {
-  width: 95%;
+  max-width: 100%;
 }
 
 #headlines h1 {
@@ -129,7 +129,7 @@ main {
 }
 
 .news-equal img {
-  width: 93%;
+  max-width: 93%;
 }
 
 .news-equal > .left {
@@ -173,11 +173,12 @@ main {
 
 .news-head-no-line > .right {
   grid-area: right;
-  width: 93%;
+  max-width: 93%;
 }
 
 .news-head-no-line img {
-  width: 96%;
+  min-width: 100%;
+  max-width: 100%;
 }
 /* NEWS SECTION WITHOUT LINE END*/
 
@@ -199,11 +200,12 @@ main {
 
 .news-head-line > .right {
   grid-area: right;
-  width: 93%;
+  max-width: 93%;
 }
 
 .news-head-line img {
-  width: 95%;
+  min-width: 100%;
+  max-width: 100%;
 }
 /* NEWS SECTION WITH LINE END */
 
@@ -233,6 +235,10 @@ main {
   font-family: nyt-franklin, serif;
   font-size: 14px;
   font-weight: 700;
+}
+
+#editorials img {
+  max-width: 100%;
 }
 /* EDITORIALS END */
 
@@ -283,8 +289,12 @@ main {
   }
 
   /* Prevent letter from going out of bound */
-  #headlines p {
-    width: 90%;
+  #headlines p,
+  #headlines h1,
+  #headlines h2,
+  #headlines img {
+    max-width: 93%;
+    min-width: 93%;
   }
 }
 
