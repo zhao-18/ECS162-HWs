@@ -38,8 +38,9 @@
     // const data = await fetch('/api/nyt');
     // const nyt_response = await res.json();
 
-    addFeaturedNews(nyt_response[0]);
-    addFeaturedEditorial(nyt_response[0]);
+    let is_first_news = true;
+    let is_first_editorial = true;
+    let hold_article = null;
 
     // Add item to headlines and editorials
     for (let article in nyt_response) {
@@ -47,19 +48,55 @@
       // Everything else goes to ediorials
       if (nyt_response[article].type_of_material === "News") {
         // Add to headline
-        console.log(parseInt(article) % 2 === 0);
-        if (parseInt(article) % 2 === 0) {
-          addHeadLineNoLine(nyt_response[article]);
+        if (is_first_news) {
+          is_first_news = false;
+          addFeaturedNews(nyt_response[article]);
         } else {
-          addHeadLineWithLine(nyt_response[article], nyt_response[article], [nyt_response[article], nyt_response[article]]);
+          // Alternate between one with line and one without line
+          if (parseInt(article) % 5 === 0) {
+            addHeadLineNoLine(nyt_response[article]);
+          } else if (parseInt(article) % 5 === 1) {
+            // Hold onto article so that we can display two things in one with line
+            hold_article = article;
+          } else if (parseInt(article) % 5 === 2) {
+            // If the hold article is null here, then add as one with no line
+            // But if not, then add as one with line
+            if (hold_article === null) {
+              addHeadLineNoLine(nyt_response[article]);
+            } else {
+              addHeadLineWithLine(nyt_response[article], nyt_response[hold_article]);
+              hold_article = null;
+            }
+          } else if (parseInt(article) % 5 === 3) {
+            // Hold onto article so that we can display two things in one with line in the center
+            hold_article = article;
+          } else {
+            // If the hold article is null here, then add as one with no line
+            // But if not, then add as one with line
+            if (hold_article === null) {
+              addHeadLineNoLine(nyt_response[article]);
+            } else {
+              addHeadLineCenterLine(nyt_response[article], nyt_response[hold_article]);
+              hold_article = null;
+            }
+          }
         }
-
-        addHeadLineCenterLine(nyt_response[article], nyt_response[article]);
 
       } else {
         // Add the articles to editorial
-        addEditorial(nyt_response[article]);
+        if (is_first_editorial) {
+          is_first_editorial = false;
+          addFeaturedEditorial(nyt_response[article]);
+        } else {
+          addEditorial(nyt_response[article]);
+        }
       }
+    }
+
+    // If hold article is not null here, we missed one article.
+    // Display as one with no line
+    if (hold_article !== null) {
+      addHeadLineNoLine(nyt_response[hold_article]);
     }
   }
 
@@ -91,8 +128,9 @@
     left.appendChild(length);
 
     if (subarticle !== null) {
-      const left = document.createElement("div");
-      left.classList.add("left");
+      const divider = document.createElement("div");
+      divider.classList.add("hline-light-vspace");
+      left.appendChild(divider);
 
       const headline = document.createElement("h2");
       headline.textContent = subarticle.headline.main;
@@ -176,7 +214,7 @@
     container.appendChild(right);
   }
 
-  function addHeadLineWithLine(article_left, article_right = null, subarticles_left = []) : void {
+  function addHeadLineWithLine(article_left, article_right, subarticles_left = []) : void {
     const divider = document.createElement("div");
     divider.classList.add("hline-vspace");
     headlines.appendChild(divider);
@@ -341,15 +379,17 @@
     const container = document.createElement("div");
     editorials.appendChild(container);
 
-    const image = document.createElement("img");
-    image.src = article.multimedia.default.url;
-    image.alt = article.multimedia.caption;
-    container.appendChild(image);
+    if (article.multimedia?.default?.url) {
+      const image = document.createElement("img");
+      image.src = article.multimedia.default.url;
+      image.alt = article.multimedia.caption;
+      container.appendChild(image);
 
-    const credit = document.createElement("p");
-    credit.textContent = article.multimedia.credit;
-    credit.classList.add("citation");
-    container.appendChild(credit);
+      const credit = document.createElement("p");
+      credit.textContent = article.multimedia.credit;
+      credit.classList.add("citation");
+      container.appendChild(credit);
+    }
 
     const headline = document.createElement("h2");
     headline.classList.add("featured");
@@ -369,15 +409,17 @@
     const container = document.createElement("div");
     editorials.appendChild(container);
 
-    const image = document.createElement("img");
-    image.src = article.multimedia.default.url;
-    image.alt = article.multimedia.caption;
-    container.appendChild(image);
+    if (article.multimedia?.default?.url) {
+      const image = document.createElement("img");
+      image.src = article.multimedia.default.url;
+      image.alt = article.multimedia.caption;
+      container.appendChild(image);
 
-    const credit = document.createElement("p");
-    credit.textContent = article.multimedia.credit;
-    credit.classList.add("citation");
-    container.appendChild(credit);
+      const credit = document.createElement("p");
+      credit.textContent = article.multimedia.credit;
+      credit.classList.add("citation");
+      container.appendChild(credit);
+    }
 
     const author = document.createElement("p");
     author.textContent = article.byline.original;
@@ -387,11 +429,13 @@
     headline.textContent = article.headline.main;
     container.appendChild(headline);
 
-    const length = document.createElement("p");
-    const wc = parseInt(article.word_count);
-    length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-    length.classList.add("article-length");
-    container.appendChild(length);
+    if (article.word_count) {
+      const length = document.createElement("p");
+      const wc = parseInt(article.word_count);
+      length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
+      length.classList.add("article-length");
+      container.appendChild(length);
+    }
   }
 </script>
 
