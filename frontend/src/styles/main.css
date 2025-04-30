@@ -71,7 +71,7 @@ main {
 }
 
 #breaking {
-  margin: auto;
+  margin: auto !important;
 }
 
 #news .citation {
@@ -128,10 +128,6 @@ main {
   grid-template-areas: "left divider right";
 }
 
-.news-equal img {
-  max-width: 93%;
-}
-
 .news-equal > .left {
   grid-area: left;
   display: flex;
@@ -153,9 +149,15 @@ main {
 }
 
 .news-equal img {
-  max-height: 8em;
-  width: auto;
+  height: 7em;
+  width: 7em;
+  object-fit: cover;
   margin-right: 1.5em;
+}
+
+.news-equal .equal-img {
+  max-width: 8em;
+  padding-right: 1em;
 }
 /* NEWS SECTION WITH LINE IN THE CENTER END */
 

@@ -2,7 +2,7 @@ export {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWi
 
 function addFeaturedNews(headlines: HTMLElement, article, subarticle = null) : void {
     const featured_headline = document.createElement("h1");
-    featured_headline.classList.add('breaking');
+    featured_headline.id = 'breaking';
     featured_headline.textContent = article.headline.main;
     headlines.appendChild(featured_headline);
 
@@ -210,6 +210,7 @@ function addHeadLineCenterLine(headlines: HTMLElement, article_left, article_rig
     left.classList.add("left");
 
     const img_container_left = document.createElement("div");
+    img_container_left.classList.add("equal-img");
     left.appendChild(img_container_left);
 
     const image_left = document.createElement("img");
@@ -239,6 +240,7 @@ function addHeadLineCenterLine(headlines: HTMLElement, article_left, article_rig
     right.classList.add("right");
 
     const img_container_right = document.createElement("div");
+    img_container_right.classList.add("equal-img");
     right.appendChild(img_container_right);
 
     const image_right = document.createElement("img");

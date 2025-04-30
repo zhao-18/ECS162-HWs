@@ -17,7 +17,7 @@ function addFeaturedEditorial(editorials: HTMLElement, article) : void {
     }
 
     const headline = document.createElement("h2");
-    headline.classList.add("featured");
+    headline.id = 'featured';
     headline.textContent = article.headline.main;
     container.appendChild(headline);
 
