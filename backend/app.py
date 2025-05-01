@@ -16,9 +16,9 @@ def get_key():
  
 @app.route("/api/news")
 def get_news():
-    query = request.args.get("q", "Davis Sacramento")
+    query = request.args.get("q", '"UC Davis" "Sacramento"')
     url = "https://api.nytimes.com/svc/search/v2/articlesearch.json"
-    params = {"q": query, "sort": "newest", "api-key": os.getenv("NYT_API_KEY")}
+    params = {"q": query, "api-key": os.getenv("NYT_API_KEY")}
     responce = requests.get(url, params=params)
     responce.raise_for_status()
     return jsonify(responce.json())
