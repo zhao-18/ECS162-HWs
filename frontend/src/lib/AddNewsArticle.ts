@@ -9,8 +9,9 @@ function addFeaturedNews(headlines: HTMLDivElement, article, subarticle = null) 
     headlines.appendChild(container);
 
     // ---------- LEFT SECTION BEGIN ----------
-    const left = document.createElement("div");
+    const left = document.createElement("a");
     left.classList.add("left");
+    left.href = article.web_url;
     container.appendChild(left);
 
     // Add headline, abstract, and how long the article is
@@ -29,8 +30,9 @@ function addFeaturedNews(headlines: HTMLDivElement, article, subarticle = null) 
 
 
     // ---------- RIGHT SECTION BEGIN ----------
-    const right = document.createElement("div");
+    const right = document.createElement("a");
     right.classList.add("right");
+    right.href = article.web_url;
     container.appendChild(right);
 
     // Just image

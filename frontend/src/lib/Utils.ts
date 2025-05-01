@@ -3,7 +3,7 @@ export {addArticleLength, addLine, addTextElement, addImage}
 // Contains helper functions
 
 // Add the xMIN READ letter
-function addArticleLength(parent: HTMLDivElement, wordCount: string): void {
+function addArticleLength(parent: HTMLElement, wordCount: string): void {
     const length = document.createElement("p");
     parent.appendChild(length);
 
@@ -13,14 +13,14 @@ function addArticleLength(parent: HTMLDivElement, wordCount: string): void {
 }
 
 // Add line of given type
-function addLine(parent: HTMLDivElement, lineType: string) {
+function addLine(parent: HTMLElement, lineType: string) {
     const line = document.createElement("div");
     line.classList.add(lineType);
     parent.appendChild(line);
 }
 
 // Add image and credit
-function addImage(parent: HTMLDivElement, src: string, alt: string, citation: string): void {
+function addImage(parent: HTMLElement, src: string, alt: string, citation: string): void {
     const image = document.createElement("img");
     image.src = src;
     image.alt = alt;
@@ -33,7 +33,7 @@ function addImage(parent: HTMLDivElement, src: string, alt: string, citation: st
 }
 
 // Add text element (e.g. h3, p, ...)
-function addTextElement(parent: HTMLDivElement, elementType: string, text: string): HTMLElement {
+function addTextElement(parent: HTMLElement, elementType: string, text: string): HTMLElement {
     const textElement = document.createElement(elementType);
     textElement.textContent = text;
     parent.appendChild(textElement);

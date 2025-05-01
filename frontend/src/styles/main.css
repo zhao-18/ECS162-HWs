@@ -74,6 +74,19 @@ main {
   margin: auto !important;
 }
 
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  color: #5a5a5a;
+  transition: color 0.2s ease;
+}
+
 #news .citation {
   color: rgb(114, 114, 114);
   font-family: nyt-franklin, helvetica, arial, sans-serif;
