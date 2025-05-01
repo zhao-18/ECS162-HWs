@@ -3,12 +3,11 @@ export {addArticleLength, addLine, addTextElement, addImage}
 // Contains helper functions
 
 // Add the xMIN READ letter
-function addArticleLength(parent: HTMLElement, wordCount: string): void {
+function addArticleLength(parent: HTMLElement, wordCount: number): void {
     const length = document.createElement("p");
     parent.appendChild(length);
 
-    const wc = parseInt(wordCount);
-    length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
+    length.textContent = `${Math.round(wordCount / 250)} MIN READ`; // Average reading speed is 250 wpm
     length.classList.add("article-length");
 }
 

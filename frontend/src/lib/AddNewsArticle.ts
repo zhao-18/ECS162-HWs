@@ -1,8 +1,9 @@
 import {addArticleLength, addLine, addTextElement, addImage} from "./Utils";
+import type {NYTArticle} from "./NYTArticle";
 
 export {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine}
 
-function addFeaturedNews(headlines: HTMLDivElement, article, subarticle = null) : void {
+function addFeaturedNews(headlines: HTMLDivElement, article: NYTArticle, subarticle: NYTArticle | null = null) : void {
     // Create parent container and specify the type of diplay
     const container = document.createElement("div");
     container.classList.add("news-head-no-line");
@@ -47,13 +48,14 @@ function addFeaturedNews(headlines: HTMLDivElement, article, subarticle = null) 
     // ---------- RIGHT SECTION END ----------
 }
 
-function addHeadLineNoLine(headlines: HTMLDivElement, article) : void {
+function addHeadLineNoLine(headlines: HTMLDivElement, article: NYTArticle) : void {
     // Divider from previous article
     addLine(headlines, "hline-vspace");
 
     // Parent container to specify the display type
-    const container = document.createElement("div");
+    const container = document.createElement("a");
     container.classList.add("news-head-no-line");
+    container.href = article.web_url;
     headlines.appendChild(container);
 
     // ---------- LEFT SECTION BEGIN ----------
@@ -83,7 +85,7 @@ function addHeadLineNoLine(headlines: HTMLDivElement, article) : void {
     // ---------- RIGHT SECTION END ----------
 }
 
-function addHeadLineWithLine(headlines: HTMLDivElement, article_left, article_right, subarticles_left = []) : void {
+function addHeadLineWithLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle, subarticles_left: NYTArticle[] = []) : void {
     // Divider from the previous article
     addLine(headlines, "hline-vspace");
 
@@ -93,8 +95,9 @@ function addHeadLineWithLine(headlines: HTMLDivElement, article_left, article_ri
     headlines.appendChild(container);
 
     // ---------- LEFT SECTION BEGIN ----------
-    const left = document.createElement("div");
+    const left = document.createElement("a");
     left.classList.add("left");
+    left.href = article_left.web_url;
     container.appendChild(left);
 
     addTextElement(left, "h3", article_left.headline.main);
@@ -115,8 +118,9 @@ function addHeadLineWithLine(headlines: HTMLDivElement, article_left, article_ri
     addLine(container, "vline-med");
 
     // ---------- RIGHT SECTION BEGIN ----------
-    const right = document.createElement("div");
+    const right = document.createElement("a");
     right.classList.add("right");
+    right.href = article_right.web_url;
     container.appendChild(right);
 
     const img_container = document.createElement("div");
@@ -135,7 +139,7 @@ function addHeadLineWithLine(headlines: HTMLDivElement, article_left, article_ri
 
 }
 
-function addHeadLineCenterLine(headlines: HTMLDivElement, article_left, article_right) : void {
+function addHeadLineCenterLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle) : void {
     // Divider from the previous article
     addLine(headlines, "hline-light-vspace");
 
@@ -145,8 +149,9 @@ function addHeadLineCenterLine(headlines: HTMLDivElement, article_left, article_
     headlines.appendChild(container);
 
     // ---------- LEFT SECTION BEGIN ----------
-    const left = document.createElement("div");
+    const left = document.createElement("a");
     left.classList.add("left");
+    left.href = article_left.web_url;
     container.appendChild(left);
 
     const img_container_left = document.createElement("div");
@@ -170,8 +175,9 @@ function addHeadLineCenterLine(headlines: HTMLDivElement, article_left, article_
     addLine(container, "vline-med"); // Visible when viewed on larger screen
 
     // ---------- RIGHT SECTION BEGIN ----------
-    const right = document.createElement("div");
+    const right = document.createElement("a");
     right.classList.add("right");
+    right.href = article_right.web_url;
     container.appendChild(right);
 
     const img_container_right = document.createElement("div");

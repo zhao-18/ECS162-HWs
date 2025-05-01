@@ -3,8 +3,9 @@
 
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
-  import {addFeaturedEditorial, addEditorial} from "./lib/addEditorialArticle";
+  import {addFeaturedEditorial, addEditorial} from "./lib/AddEditorialArticle";
   import {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine} from "./lib/AddNewsArticle";
+  import type {NYTArticle} from "./lib/NYTArticle";
 
   // DOM elements to add news in
   let headlines : HTMLDivElement;
@@ -15,13 +16,13 @@
   });
 
   async function load_articles(): Promise<void> {
-    // TODO call backend
     const data = await fetch('/api/news');
     if (!data.ok) {
       console.error("Response was not ok: " + data);
       return;
     }
-    const nyt_response = (await data.json()).response.docs;
+    const nyt_response: NYTArticle[] = (await data.json()).response.docs;
+    console.log("NYT response", nyt_response);
 
     let is_first_news = true;
     let is_first_editorial = true;

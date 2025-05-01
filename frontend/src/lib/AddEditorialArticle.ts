@@ -1,9 +1,11 @@
 import {addArticleLength, addLine, addTextElement, addImage} from "./Utils";
+import type {NYTArticle} from "./NYTArticle";
 
 export {addEditorial, addFeaturedEditorial}
 
-function addFeaturedEditorial(editorials: HTMLDivElement, article) : void {
-    const container = document.createElement("div");
+function addFeaturedEditorial(editorials: HTMLDivElement, article: NYTArticle) : void {
+    const container = document.createElement("a");
+    container.href = article.web_url;
     editorials.appendChild(container);
 
     if (article.multimedia?.default?.url) {
@@ -21,10 +23,11 @@ function addFeaturedEditorial(editorials: HTMLDivElement, article) : void {
     addTextElement(container, "p", article.abstract);
 }
 
-function addEditorial(editorials: HTMLDivElement, article) : void {
+function addEditorial(editorials: HTMLDivElement, article: NYTArticle) : void {
     addLine(editorials, "hline-light-vspace");
 
-    const container = document.createElement("div");
+    const container = document.createElement("a");
+    container.href = article.web_url;
     editorials.appendChild(container);
 
     if (article.multimedia?.default?.url) {
