@@ -7,8 +7,8 @@
   import {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine} from "./lib/AddNewsArticle";
 
   // DOM elements to add news in
-  let headlines : HTMLElement;
-  let editorials : HTMLElement;
+  let headlines : HTMLDivElement;
+  let editorials : HTMLDivElement;
 
   onMount(async () => {
     await load_articles();
@@ -30,7 +30,7 @@
     // Add item to headlines and editorials
     for (let article in nyt_response) {
       // If type of material is news, it goes to headline.
-      // Everything else goes to ediorials
+      // Everything else goes to editorials
       if (nyt_response[article].type_of_material === "News") {
         // Add to headline
         if (is_first_news) {
@@ -99,7 +99,7 @@
     <div id="news-divider"><div class="vline-med"></div></div>
 
     <!--            Editorial, on right column-->
-    <div id="editorials" bind:this={editorials}></div>
+    <div id="editorials" bind:this={editorials}><div class="vspace" /></div>
     <!--            Editorial end-->
   </section>
   <div class="vspace"></div>
