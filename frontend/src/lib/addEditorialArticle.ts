@@ -1,64 +1,45 @@
+import {addArticleLength, addLine, addTextElement, addImage} from "./Utils";
+
 export {addEditorial, addFeaturedEditorial}
 
-function addFeaturedEditorial(editorials: HTMLElement, article) : void {
+function addFeaturedEditorial(editorials: HTMLDivElement, article) : void {
     const container = document.createElement("div");
     editorials.appendChild(container);
 
     if (article.multimedia?.default?.url) {
-        const image = document.createElement("img");
-        image.src = article.multimedia.default.url;
-        image.alt = article.multimedia.caption;
-        container.appendChild(image);
-
-        const credit = document.createElement("p");
-        credit.textContent = article.multimedia.credit;
-        credit.classList.add("citation");
-        container.appendChild(credit);
+        addImage(
+            container,
+            article.multimedia.default.url,
+            article.multimedia.caption,
+            article.multimedia.credit
+        );
     }
 
-    const headline = document.createElement("h2");
+    const headline = addTextElement(container, "h2", article.headline.main);
     headline.id = 'featured';
-    headline.textContent = article.headline.main;
-    container.appendChild(headline);
 
-    const abstract = document.createElement("p");
-    abstract.textContent = article.abstract;
-    container.appendChild(abstract);
+    addTextElement(container, "p", article.abstract);
 }
 
-function addEditorial(editorials: HTMLElement, article) : void {
-    const divider = document.createElement('div');
-    divider.classList.add('hline-light-vspace');
-    editorials.appendChild(divider);
+function addEditorial(editorials: HTMLDivElement, article) : void {
+    addLine(editorials, "hline-light-vspace");
 
     const container = document.createElement("div");
     editorials.appendChild(container);
 
     if (article.multimedia?.default?.url) {
-        const image = document.createElement("img");
-        image.src = article.multimedia.default.url;
-        image.alt = article.multimedia.caption;
-        container.appendChild(image);
-
-        const credit = document.createElement("p");
-        credit.textContent = article.multimedia.credit;
-        credit.classList.add("citation");
-        container.appendChild(credit);
+        addImage(
+            container,
+            article.multimedia.default.url,
+            article.multimedia.caption,
+            article.multimedia.credit
+        );
     }
 
-    const author = document.createElement("p");
-    author.textContent = article.byline.original;
-    container.appendChild(author);
-
-    const headline = document.createElement("h2");
-    headline.textContent = article.headline.main;
-    container.appendChild(headline);
+    addTextElement(container, "p", article.byline.original);
+    addTextElement(container, "h2", article.headline.main);
 
     if (article.word_count) {
-        const length = document.createElement("p");
-        const wc = parseInt(article.word_count);
-        length.textContent = `${Math.round(wc / 250)} MIN READ`; // Average reading speed is 250 wpm
-        length.classList.add("article-length");
-        container.appendChild(length);
+        addArticleLength(container, article.word_count);
     }
 }
