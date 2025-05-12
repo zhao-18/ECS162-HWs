@@ -109,8 +109,3 @@
 <!-- Separated footer for cleaner main -->
 <Footer />
 
-<!-- import online resource (for search logo and chevron logo) -->
-<style>
-  @import "https://www.w3schools.com/w3css/5/w3.css";
-  @import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css";
-</style>

@@ -26,7 +26,7 @@
 body {
   max-width: 1200px;
   width: 95%;
-  margin: auto;
+  margin: auto !important; /* Otherwise w3.css will overwrite this */
   font-size: 14px;
 }
 
