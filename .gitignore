@@ -1,2 +1,5 @@
 .env
 .idea
+frontend/node_modules
+frontend/package-lock.json
+backend/__pycache__/*
