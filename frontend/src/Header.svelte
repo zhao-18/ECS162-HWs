@@ -11,8 +11,8 @@
         </div>
         <!--        subscription / login button-->
         <div id="personalize">
-            <button>SUBSCRIBE FOR $1/WEEK</button>
-            <button>LOG IN</button>
+            <a href="https://www.nytimes.com/subscription">SUBSCRIBE FOR $1/WEEK</a>
+            <a href="/login">LOG IN</a>
         </div>
     </div>
 

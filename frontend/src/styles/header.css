@@ -86,7 +86,8 @@ header a {
     justify-content: right;
 }
 
-#personalize > button {
+#personalize > a {
+    text-decoration: none;
     border: 1px solid rgb(50, 104, 145);
     border-radius: 3px;
     background: rgb(86, 123, 149);
@@ -97,7 +98,7 @@ header a {
     margin: 0 0.4em;
 }
 
-#personalize > button:hover {
+#personalize > a:hover {
     background: rgb(50, 104, 145);
     cursor: pointer;
     transition: background 0.6s ease;

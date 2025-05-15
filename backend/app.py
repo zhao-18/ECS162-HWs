@@ -38,6 +38,10 @@ def serve_frontend(path=''):
         return send_from_directory(static_path, path)
     return send_from_directory(template_path, 'index.html')
 
+@app.route('/login')
+def login_frontend():
+    return send_from_directory(template_path, 'login.html')
+
 @app.route("/test-mongo")
 def test_mongo():
     return jsonify({"collections": db.list_collection_names()})
