@@ -23,6 +23,7 @@
   src: url(../assets/nyt-cheltenham.ttf);
 }
 
+/* GLOBAL SETTINGS */
 body {
   max-width: 1200px;
   width: 95%;
@@ -35,6 +36,16 @@ main {
   flex-direction: column;
 }
 
+.commentVisibility {
+  width: 7em;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #DFDFDF;
+  background: white;
+  border-radius: 30px;
+  align-items: center;
+  justify-content: space-evenly;
+}
 
 /* LETTERS STYLING BEGIN */
 #news p {

@@ -1,0 +1,52 @@
+#commentPane {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#invokeCommentPane {
+    /*opacity: 0;*/
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+#comments {
+    position: absolute;
+    width: 550px;
+    right: 0;
+    background: white;
+    list-style-type: none;
+
+    transform-origin: 0 0;
+    transform: translate(100%, 0);
+
+    transition: transform 0.2s ease-out;
+
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+#invokeCommentPane:checked ~ #comments {
+    transform: none;
+}
+
+#invokeCommentPane:checked ~ #overlay {
+    display: initial;
+}
+
+#overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 20%;
+    display: none;
+}

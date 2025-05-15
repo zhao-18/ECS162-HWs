@@ -43,7 +43,20 @@ function addTextElement(parent: HTMLElement, elementType: string, text: string):
 function addCommentButton(parent: HTMLElement, toggle: ((ev: MouseEvent) => void)): void {
     const comment = document.createElement("button");
     comment.classList.add("commentVisibility");
-    comment.textContent = "Comment";
     comment.onclick = toggle;
     parent.appendChild(comment);
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute('width', '21');
+    svg.setAttribute('height', '18');
+    svg.setAttribute("aria-hidden","true");
+    svg.setAttribute('viewbox', '0 0 24 18');
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    // Exerted from nytimes.com
+    path.setAttribute("d", "m14.52 17.831-5.715-4.545H2.4a1.468 1.468 0 0 1-1.468-1.469V1.894A1.471 1.471 0 0 1 2.4.405h16.583a1.469 1.469 0 0 1 1.469 1.469v9.923a1.469 1.469 0 0 1-1.47 1.47H14.58l-.06 4.564ZM2.4 1.645a.228.228 0 0 0-.228.229v9.923a.228.228 0 0 0 .228.229h6.811l4.06 3.235v-3.235h5.652a.228.228 0 0 0 .229-.229V1.874a.228.228 0 0 0-.229-.229H2.4Z")
+    svg.appendChild(path);
+    comment.appendChild(svg);
+
+    addTextElement(comment, "p", "comment");
 }
