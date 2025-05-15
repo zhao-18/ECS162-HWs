@@ -26,7 +26,7 @@
 
     let is_first_news = true;
     let is_first_editorial = true;
-    let hold_article = null;
+    let hold_article: string = "";
 
     // Add item to headlines and editorials
     for (let article in nyt_response) {
@@ -47,23 +47,23 @@
           } else if (parseInt(article) % 5 === 2) {
             // If the hold article is null here, then add as one with no line
             // But if not, then add as one with line
-            if (hold_article === null) {
+            if (hold_article === "") {
               addHeadLineNoLine(headlines, nyt_response[article]);
             } else {
               addHeadLineWithLine(headlines, nyt_response[article], nyt_response[hold_article]);
-              hold_article = null;
+              hold_article = "";
             }
           } else if (parseInt(article) % 5 === 3) {
             // Hold onto article so that we can display two things in one with line in the center
             hold_article = article;
           } else {
-            // If the hold article is null here, then add as one with no line
+            // If the hold article is empty here, then add as one with no line
             // But if not, then add as one with line
-            if (hold_article === null) {
+            if (hold_article === "") {
               addHeadLineNoLine(headlines, nyt_response[article]);
             } else {
               addHeadLineCenterLine(headlines, nyt_response[article], nyt_response[hold_article]);
-              hold_article = null;
+              hold_article = "";
             }
           }
         }
@@ -79,9 +79,9 @@
       }
     }
 
-    // If hold article is not null here, we missed one article.
+    // If hold article is not empty here, we missed one article.
     // Display as one with no line
-    if (hold_article !== null) {
+    if (hold_article !== "") {
       addHeadLineNoLine(headlines, nyt_response[hold_article]);
     }
   }
@@ -100,7 +100,7 @@
     <div id="news-divider"><div class="vline-med"></div></div>
 
     <!--            Editorial, on right column-->
-    <div id="editorials" bind:this={editorials}><div class="vspace" /></div>
+    <div id="editorials" bind:this={editorials}><div class="vspace"></div></div>
     <!--            Editorial end-->
   </section>
   <div class="vspace"></div>
