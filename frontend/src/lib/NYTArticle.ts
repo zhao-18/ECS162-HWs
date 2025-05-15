@@ -15,4 +15,5 @@ export interface NYTArticle {
     byline: {
         original: string;
     }
+    type_of_material: string;
 }
