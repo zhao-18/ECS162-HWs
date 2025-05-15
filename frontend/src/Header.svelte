@@ -20,7 +20,7 @@
     <div id="masthead">
         <div id="date">
             <p>{getCurrentDate()}</p>
-            <a href="#">Today's Paper</a>
+            <a href="https://www.nytimes.com/section/todayspaper">Today's Paper</a>
         </div>
 
         <!--          NYT logo-->
@@ -44,18 +44,18 @@
     <!--        nav bar begin-->
     <nav>
         <ul>
-            <li><a href="#">U.S. <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">World <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Business <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Arts <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Lifestyle <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Opinion <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/section/us">U.S. <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/section/world">World <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/section/business">Business <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/section/arts">Arts <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/spotlight/lifestyle">Lifestyle <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/section/opinion">Opinion <i class="fa fa-angle-down lightgray"></i></a></li>
             <li><div class="vline-light"></div></li>
-            <li><a href="#">Audio <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Games <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Cooking <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">Wirecutter <i class="fa fa-angle-down lightgray"></i></a></li>
-            <li><a href="#">The Athletic <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/spotlight/podcasts">Audio <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/crosswords">Games <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://cooking.nytimes.com/">Cooking <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/wirecutter">Wirecutter <i class="fa fa-angle-down lightgray"></i></a></li>
+            <li><a href="https://www.nytimes.com/athletic">The Athletic <i class="fa fa-angle-down lightgray"></i></a></li>
         </ul>
     </nav>
     <!--        nav bar end-->
