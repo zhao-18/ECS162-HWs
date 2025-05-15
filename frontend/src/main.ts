@@ -3,6 +3,7 @@ import { mount } from 'svelte'
 import './styles/main.css'
 import './styles/footer.css'
 import './styles/header.css'
+import './styles/utils.css'
 import App from './App.svelte'
 
 const app = mount(App, {
