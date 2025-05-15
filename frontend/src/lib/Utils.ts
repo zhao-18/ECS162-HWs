@@ -1,4 +1,4 @@
-export {addArticleLength, addLine, addTextElement, addImage}
+export {addArticleLength, addLine, addTextElement, addImage, addCommentButton}
 
 // Contains helper functions
 
@@ -38,4 +38,12 @@ function addTextElement(parent: HTMLElement, elementType: string, text: string):
     parent.appendChild(textElement);
 
     return textElement
+}
+
+function addCommentButton(parent: HTMLElement, toggle: ((ev: MouseEvent) => void)): void {
+    const comment = document.createElement("button");
+    comment.classList.add("commentVisibility");
+    comment.textContent = "Comment";
+    comment.onclick = toggle;
+    parent.appendChild(comment);
 }
