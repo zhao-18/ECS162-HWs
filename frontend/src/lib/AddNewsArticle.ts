@@ -1,9 +1,9 @@
-import {addArticleLength, addLine, addTextElement, addImage} from "./Utils";
+import {addArticleLength, addLine, addTextElement, addImage, addCommentButton} from "./Utils";
 import type {NYTArticle} from "./NYTArticle";
 
 export {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine}
 
-function addFeaturedNews(headlines: HTMLDivElement, article: NYTArticle, subarticle: NYTArticle | null = null) : void {
+function addFeaturedNews(headlines: HTMLDivElement, article: NYTArticle, toggleCommend: ((ev: MouseEvent) => void), subarticle: NYTArticle | null = null) : void {
     // Create parent container and specify the type of diplay
     const container = document.createElement("div");
     container.classList.add("news-head-no-line");
@@ -27,6 +27,8 @@ function addFeaturedNews(headlines: HTMLDivElement, article: NYTArticle, subarti
         addTextElement(left, "p", subarticle.abstract);
         addArticleLength(left, subarticle.word_count);
     }
+
+    addCommentButton(left, toggleCommend);
     // ---------- LEFT SECTION END ----------
 
 
@@ -48,7 +50,7 @@ function addFeaturedNews(headlines: HTMLDivElement, article: NYTArticle, subarti
     // ---------- RIGHT SECTION END ----------
 }
 
-function addHeadLineNoLine(headlines: HTMLDivElement, article: NYTArticle) : void {
+function addHeadLineNoLine(headlines: HTMLDivElement, article: NYTArticle, toggleCommend: ((ev: MouseEvent) => void)) : void {
     // Divider from previous article
     addLine(headlines, "hline-vspace");
 
@@ -66,6 +68,7 @@ function addHeadLineNoLine(headlines: HTMLDivElement, article: NYTArticle) : voi
     addTextElement(left, "h3", article.headline.main);
     addTextElement(left, "p", article.abstract);
     addArticleLength(left, article.word_count);
+    addCommentButton(left, toggleCommend);
     // ---------- LEFT SECTION END ----------
 
 
@@ -85,7 +88,7 @@ function addHeadLineNoLine(headlines: HTMLDivElement, article: NYTArticle) : voi
     // ---------- RIGHT SECTION END ----------
 }
 
-function addHeadLineWithLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle, subarticles_left: NYTArticle[] = []) : void {
+function addHeadLineWithLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle, toggleCommend: ((ev: MouseEvent) => void), subarticles_left: NYTArticle[] = []) : void {
     // Divider from the previous article
     addLine(headlines, "hline-vspace");
 
@@ -103,6 +106,7 @@ function addHeadLineWithLine(headlines: HTMLDivElement, article_left: NYTArticle
     addTextElement(left, "h3", article_left.headline.main);
     addTextElement(left, "p", article_left.abstract);
     addArticleLength(left, article_left.word_count);
+    addCommentButton(left, toggleCommend);
 
     // If there are any sub-articles, add to the left side
     if (Array.isArray(subarticles_left)) {
@@ -135,11 +139,12 @@ function addHeadLineWithLine(headlines: HTMLDivElement, article_left: NYTArticle
     addTextElement(right, "h3", article_right.headline.main);
     addTextElement(right, "p", article_right.abstract);
     addArticleLength(right, article_right.word_count);
+    addCommentButton(right, toggleCommend);
     // ---------- RIGHT SECTION END ----------
 
 }
 
-function addHeadLineCenterLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle) : void {
+function addHeadLineCenterLine(headlines: HTMLDivElement, article_left: NYTArticle, article_right: NYTArticle, toggleCommend: ((ev: MouseEvent) => void)) : void {
     // Divider from the previous article
     addLine(headlines, "hline-light-vspace");
 
@@ -169,6 +174,7 @@ function addHeadLineCenterLine(headlines: HTMLDivElement, article_left: NYTArtic
 
     addTextElement(headline_container_left, "h3", article_left.headline.main)
     addArticleLength(headline_container_left, article_left.word_count);
+    addCommentButton(headline_container_left, toggleCommend);
     // ---------- LEFT SECTION END ----------
 
     addLine(container, "hline-light-vspace"); // Visible when viewed on small screen
@@ -195,5 +201,6 @@ function addHeadLineCenterLine(headlines: HTMLDivElement, article_left: NYTArtic
 
     addTextElement(headline_container_right, "h3", article_right.headline.main);
     addArticleLength(headline_container_right, article_right.word_count);
+    addCommentButton(headline_container_right, toggleCommend);
     // ---------- RIGHT SECTION END ----------
 }

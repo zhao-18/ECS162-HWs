@@ -6,6 +6,14 @@
   import {addFeaturedEditorial, addEditorial} from "./lib/AddEditorialArticle";
   import {addFeaturedNews, addHeadLineCenterLine, addHeadLineNoLine, addHeadLineWithLine} from "./lib/AddNewsArticle";
   import type {NYTArticle} from "./lib/NYTArticle";
+  import CommentPane from "./CommentPane.svelte";
+
+  const commentSectionVisibility = $state({state: false});
+
+  function toggleCommandPanel(ev: MouseEvent) {
+    commentSectionVisibility.state = !commentSectionVisibility.state;
+    ev.preventDefault();
+  }
 
   // DOM elements to add news in
   let headlines : HTMLDivElement;
@@ -22,7 +30,6 @@
       return;
     }
     const nyt_response: NYTArticle[] = (await data.json()).response.docs;
-    console.log("NYT response", nyt_response);
 
     let is_first_news = true;
     let is_first_editorial = true;
@@ -36,11 +43,11 @@
         // Add to headline
         if (is_first_news) {
           is_first_news = false;
-          addFeaturedNews(headlines, nyt_response[article]);
+          addFeaturedNews(headlines, nyt_response[article], toggleCommandPanel);
         } else {
           // Alternate between one with line and one without line
           if (parseInt(article) % 5 === 0) {
-            addHeadLineNoLine(headlines, nyt_response[article]);
+            addHeadLineNoLine(headlines, nyt_response[article], toggleCommandPanel);
           } else if (parseInt(article) % 5 === 1) {
             // Hold onto article so that we can display two things in one with line
             hold_article = article;
@@ -48,9 +55,9 @@
             // If the hold article is null here, then add as one with no line
             // But if not, then add as one with line
             if (hold_article === "") {
-              addHeadLineNoLine(headlines, nyt_response[article]);
+              addHeadLineNoLine(headlines, nyt_response[article], toggleCommandPanel);
             } else {
-              addHeadLineWithLine(headlines, nyt_response[article], nyt_response[hold_article]);
+              addHeadLineWithLine(headlines, nyt_response[article], nyt_response[hold_article], toggleCommandPanel);
               hold_article = "";
             }
           } else if (parseInt(article) % 5 === 3) {
@@ -60,9 +67,9 @@
             // If the hold article is empty here, then add as one with no line
             // But if not, then add as one with line
             if (hold_article === "") {
-              addHeadLineNoLine(headlines, nyt_response[article]);
+              addHeadLineNoLine(headlines, nyt_response[article], toggleCommandPanel);
             } else {
-              addHeadLineCenterLine(headlines, nyt_response[article], nyt_response[hold_article]);
+              addHeadLineCenterLine(headlines, nyt_response[article], nyt_response[hold_article], toggleCommandPanel);
               hold_article = "";
             }
           }
@@ -82,13 +89,15 @@
     // If hold article is not empty here, we missed one article.
     // Display as one with no line
     if (hold_article !== "") {
-      addHeadLineNoLine(headlines, nyt_response[hold_article]);
+      addHeadLineNoLine(headlines, nyt_response[hold_article], toggleCommandPanel);
     }
   }
 </script>
 
 <!-- Separated header for cleaner main -->
 <Header />
+
+<CommentPane visibility={commentSectionVisibility} />
 
 <main>
   <section id="news">
