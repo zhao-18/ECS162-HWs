@@ -1,7 +1,7 @@
 #comment {
     display: flex;
     flex-direction: column;
-    margin: 3em;
+    margin-bottom: 3em;
 }
 
 #username {
@@ -15,7 +15,7 @@
     color: rgb(136, 136, 136);
     font-weight: 300;
     font-size: 14px;
-    margin: 7px 0 7px 0;
+    margin-bottom: 5px;
 }
 
 #content {
@@ -25,11 +25,12 @@
     font-weight: 500;
     line-height: 20px;
     margin: 0;
+    overflow-wrap: break-word;
 }
 
 #metadata > .vline-light {
     height: 1em;
-    margin: 0.3em 1em 0;
+    margin: 0.3em 0.6em;
 }
 
 #social {

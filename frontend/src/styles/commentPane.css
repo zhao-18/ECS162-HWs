@@ -8,12 +8,38 @@
     user-select: none;
 }
 
+#comment-title {
+    color: rgb(0, 0, 0);
+    font-family: nyt-franklin, helvetica, arial, sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+#comment-field {
+    border: 1px solid rgb(226, 226, 226);
+    border-radius: 3px;
+    font-family: nyt-franklin, helvetica, arial, sans-serif;
+    padding: 11px 15px 10px;
+    width: 100%;
+    color: rgb(102, 102, 102);
+    font-size: 13px;
+    height: 42px;
+    cursor: text;
+}
+
+#comment-prompt {
+    color: rgb(51, 51, 51);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#comment-prompt > a {
+    color: rgb(50, 104, 145);
+}
+
 #invokeCommentPane {
-    /*opacity: 0;*/
+    opacity: 0;
     position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
 }
 
 #comments {
@@ -30,6 +56,7 @@
 
     height: 100vh;
     overflow-y: scroll;
+    padding: 0 3em 0 3em;
 }
 
 #invokeCommentPane:checked ~ #comments {
