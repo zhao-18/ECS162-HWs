@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import type {comment} from "./lib/CommentInterface";
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
   import {addFeaturedEditorial, addEditorial} from "./lib/AddEditorialArticle";
@@ -9,7 +8,21 @@
   import CommentPane from "./CommentPane.svelte";
 
   let commentSectionVisibility = $state({state: false});
-  let commentProps = $state({articleId: "", comments: []});
+  let commentProps = $state({
+    articleId: "",
+    comments: [
+      {id:"1", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"2", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"3", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"4", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"5", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"6", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"7", parent:"4", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"7", parent:"4", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"7", parent:"5", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+      {id:"7", parent:"5", username:"trebor", locale:"USA", date:"May 15", content:"YEHEHAHHAHA", recommend:22, replyNum:14},
+    ]
+  });
 
   function toggleCommandPanel(ev: MouseEvent, articleId: string) {
     commentProps.articleId = articleId;

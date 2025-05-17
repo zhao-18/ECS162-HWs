@@ -1,6 +1,11 @@
 <script lang="ts">
     import type {comment} from "./lib/CommentInterface";
     import Comment from "./lib/Comment.svelte";
+    import {mount} from "svelte";
+
+    interface CommentWithReply extends comment {
+        reply: CommentWithReply[];
+    }
 
     interface CommentProps {
         visibility: {
@@ -13,7 +18,6 @@
     }
 
     let {visibility = $bindable(), data} : CommentProps = $props();
-    let commentMap = $state(new Map<string, comment[]>());
 
     function changeVisibility() {
         visibility.state = !visibility.state;
@@ -28,29 +32,75 @@
         console.log(data.articleId, commentContent); // Post to backend with article id and such
     }
 
-    function createRelationship() {
-        data.comments.forEach(comment => {
-            if (comment.parent === "root") {
-                if (!commentMap.has(comment.id)) {
-                    commentMap.set(comment.id, []);
-                }
-            } else {
-                const parent = data.comments.find(c => c.id === comment.parent);
-                if (parent !== null && parent !== undefined) {
-                    if (!commentMap.has(parent.id)) {
-                        commentMap.set(parent.id, []);
-                    }
+    function createRelationship(flatComments: comment[]) : CommentWithReply[] {
+        const comments: CommentWithReply[] = flatComments.map((c: comment) => {
+            return {
+                ...c,
+                reply: []
+            }
+        })
 
-                    commentMap.get(parent.id)!.push(comment); // If commentMap does not have parent already, it is added right before
+        comments.forEach(comment => {
+            if (comment.parent !== "root") {
+                const parent = comments.find(c => c.id === comment.parent);
+                if (parent !== null && parent !== undefined) {
+                    parent.reply.push(comment);
                 } else {
                     comment.parent = "root";
-                    if (!commentMap.has(comment.id)) {
-                        commentMap.set(comment.id, []);
-                    }
                 }
             }
         })
+
+        return comments.filter(comment => comment.parent === "root");
     }
+
+    function replaceComments(comments: CommentWithReply[]) {
+        const container = document.getElementById("comment-container");
+        if (!container) return;
+        container.replaceChildren();
+        for (const [_, comment] of comments.entries()) {
+            const commentElement = addComment(container, comment);
+            if (comment.reply.length > 0) {
+                addReplies(commentElement, comment.reply);
+            }
+        }
+    }
+
+    function addReplies(parent: HTMLElement, replies: CommentWithReply[]) {
+        const container = document.createElement("div");
+        container.classList.add("reply-container");
+        parent.appendChild(container);
+
+        const line = document.createElement("div");
+        line.classList.add("vline-med");
+        container.appendChild(line);
+
+        const replyArea = document.createElement("div");
+        container.appendChild(replyArea);
+
+        for (const [_, comment] of replies.entries()) {
+            const commentElement = addComment(replyArea, comment);
+            if (comment.reply.length > 0) {
+                addReplies(commentElement, comment.reply);
+            }
+        }
+    }
+
+    function addComment(parent: HTMLElement, comment: CommentWithReply) : HTMLElement {
+        const commentContainer = document.createElement("div");
+        commentContainer.classList.add("comment-container");
+        mount(Comment, {
+            target: commentContainer,
+            props: comment
+        });
+        parent.appendChild(commentContainer);
+        return commentContainer;
+    }
+
+    $effect(() => {
+        const comments: CommentWithReply[] = createRelationship(data.comments);
+        replaceComments(comments);
+    });
 </script>
 
 <div id="commentPane">
@@ -67,13 +117,15 @@
         </form>
         <p id="comment-prompt">The Times needs your voice. We welcome your on-topic commentary, criticism and expertise. <a href="https://help.nytimes.com/hc/en-us/articles/115014792387-The-Comments-Section">Comments are moderated for civility.</a></p>
         <div class="hline-light-vspace"></div>
-        <Comment id="1" parent="root" username="trebor" locale="USA" date="May 15" content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." recommend={22} replyNum={14} />
-        <Comment id="2" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="3" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="4" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="5" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="6" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="7" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-        <Comment id="8" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+        <div id="comment-container">
+            <Comment id="1" parent="root" username="trebor" locale="USA" date="May 15" content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." recommend={22} replyNum={14} />
+            <Comment id="2" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="3" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="4" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="5" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="6" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="7" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+            <Comment id="8" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
+        </div>
     </div>
 </div>
