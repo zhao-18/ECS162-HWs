@@ -50,6 +50,7 @@
         <button id="reply" onclick={toggleReplyField}>Reply</button>
         <button id="recommend">Recommend</button>
         <button id="share">Share</button>
+        <button id="moderate">Delete</button>
     </div>
     <span id="num-reply">{props.replyNum} REPLIES</span>
     {#if replyFieldVisible}

@@ -60,7 +60,7 @@
     font-family: nyt-franklin, helvetica, arial, sans-serif;
 }
 
-#reply-field{
+#reply-field {
     border: 1px solid rgb(226, 226, 226);
     border-radius: 3px;
     font-family: nyt-franklin, helvetica, arial, sans-serif;
@@ -71,4 +71,8 @@
     font-size: 13px;
     height: 42px;
     cursor: text;
+}
+
+#social > #moderate {
+    color: rgb(198, 59, 59);
 }
