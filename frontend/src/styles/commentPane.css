@@ -8,11 +8,26 @@
     user-select: none;
 }
 
+#comment-heading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#comment-heading > button {
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 25px;
+    cursor: pointer;
+}
+
 #comment-title {
     color: rgb(0, 0, 0);
     font-family: nyt-franklin, helvetica, arial, sans-serif;
     font-size: 30px;
     font-weight: 700;
+    flex-grow: 1;
 }
 
 #comment-field {
@@ -48,12 +63,9 @@
     right: 0;
     background: white;
     list-style-type: none;
-
     transform-origin: 0 0;
     transform: translate(100%, 0);
-
     transition: transform 0.2s ease-out;
-
     height: 100vh;
     overflow-y: scroll;
     padding: 0 3em 0 3em;

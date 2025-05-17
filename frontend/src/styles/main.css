@@ -45,6 +45,7 @@ main {
   border-radius: 30px;
   align-items: center;
   justify-content: space-evenly;
+  cursor: pointer;
 }
 
 /* LETTERS STYLING BEGIN */

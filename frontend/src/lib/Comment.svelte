@@ -1,12 +1,5 @@
 <script lang="ts">
-    interface comment {
-        username: string;
-        locale: string;
-        date: string;
-        content: string;
-        recommend: number;
-        replyNum: number;
-    }
+    import type { comment } from "./CommentInterface";
     let props: comment = $props();
 </script>
 

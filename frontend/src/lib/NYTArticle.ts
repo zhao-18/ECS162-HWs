@@ -1,4 +1,5 @@
 export interface NYTArticle {
+    _id: string;
     web_url: string;
     multimedia: {
         default: {

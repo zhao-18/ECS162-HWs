@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-
+  import type {comment} from "./lib/CommentInterface";
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
   import {addFeaturedEditorial, addEditorial} from "./lib/AddEditorialArticle";
@@ -8,9 +8,14 @@
   import type {NYTArticle} from "./lib/NYTArticle";
   import CommentPane from "./CommentPane.svelte";
 
-  const commentSectionVisibility = $state({state: false});
+  let commentSectionVisibility = $state({state: false});
+  let commentProps = $state({articleId: "", comments: []});
 
-  function toggleCommandPanel(ev: MouseEvent) {
+  function toggleCommandPanel(ev: MouseEvent, articleId: string) {
+    commentProps.articleId = articleId;
+
+    // Get comments from the backend and populate commentList here
+
     commentSectionVisibility.state = !commentSectionVisibility.state;
     ev.preventDefault();
   }
@@ -97,7 +102,7 @@
 <!-- Separated header for cleaner main -->
 <Header />
 
-<CommentPane visibility={commentSectionVisibility} />
+<CommentPane bind:visibility={commentSectionVisibility} data={commentProps} />
 
 <main>
   <section id="news">
