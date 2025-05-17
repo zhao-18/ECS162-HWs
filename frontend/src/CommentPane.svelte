@@ -28,8 +28,21 @@
         const userInput: HTMLInputElement | null = <HTMLInputElement>document.getElementById("comment-field");
         const commentContent = userInput?.value;
         if (!commentContent) return; // Reject null/empty comments
+        let now = new Date();
 
-        console.log(data.articleId, commentContent); // Post to backend with article id and such
+        console.log({
+            id: "create on backend?",
+            username: "get on backend",
+            locale: "USA",
+            date: `${now.getMonth() + 1}/${now.getDate()}`,
+            content: commentContent,
+            recommend: 0,
+            replyNum: 0,
+            articleId: data.articleId,
+            parent: "root",
+        }); // Post to backend
+
+        userInput.value = "";
     }
 
     function createRelationship(flatComments: comment[]) : CommentWithReply[] {
@@ -76,6 +89,7 @@
         container.appendChild(line);
 
         const replyArea = document.createElement("div");
+        replyArea.classList.add("reply-area");
         container.appendChild(replyArea);
 
         for (const [_, comment] of replies.entries()) {
@@ -103,7 +117,7 @@
     });
 </script>
 
-<div id="commentPane">
+<div id="comment-pane">
     <input type="checkbox" id="invokeCommentPane" bind:checked={visibility.state}/>
     <div id="overlay" onclick={changeVisibility} onkeydown={_ => {}} role="button" tabindex="0"></div>
     <div id="comments">
@@ -118,14 +132,6 @@
         <p id="comment-prompt">The Times needs your voice. We welcome your on-topic commentary, criticism and expertise. <a href="https://help.nytimes.com/hc/en-us/articles/115014792387-The-Comments-Section">Comments are moderated for civility.</a></p>
         <div class="hline-light-vspace"></div>
         <div id="comment-container">
-            <Comment id="1" parent="root" username="trebor" locale="USA" date="May 15" content="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum." recommend={22} replyNum={14} />
-            <Comment id="2" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="3" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="4" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="5" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="6" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="7" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
-            <Comment id="8" parent="root" username="trebor" locale="USA" date="May 15" content="YEHEHAHHAHA" recommend={22} replyNum={14} />
         </div>
     </div>
 </div>

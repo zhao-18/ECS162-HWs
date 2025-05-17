@@ -1,4 +1,4 @@
-#commentPane {
+#comment-pane {
     display: block;
     position: fixed;
     top: 0;
@@ -102,10 +102,21 @@
     border-left: lightgray solid 2px;
 }
 
+.reply-container > .reply-area {
+    flex-grow: 1;
+}
+
 .comment-container:not(:last-child) {
     padding-bottom: 1.5em;
 }
 
 #comment-container > .comment-container {
     padding-bottom: 2em;
+}
+
+/* PHONE */
+@media only screen and (max-width: 550px) {
+    #comments {
+        width: 100vw;
+    }
 }

@@ -37,7 +37,7 @@ main {
 }
 
 .commentVisibility {
-  width: 7em;
+  max-width: 7em;
   display: flex;
   flex-direction: row;
   border: 1px solid #DFDFDF;
@@ -322,6 +322,10 @@ a:hover {
   #headlines img {
     max-width: 93%;
     min-width: 93%;
+  }
+
+  .commentVisibility > p {
+    display: none;
   }
 }
 

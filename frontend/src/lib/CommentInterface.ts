@@ -6,5 +6,6 @@ export interface comment {
     content: string;
     recommend: number;
     replyNum: number;
+    articleId: string;
     parent: string; // root if no parent. ID of parent comment if reply
 }

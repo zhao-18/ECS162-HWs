@@ -59,3 +59,16 @@
     color: rgb(136, 136, 136);
     font-family: nyt-franklin, helvetica, arial, sans-serif;
 }
+
+#reply-field{
+    border: 1px solid rgb(226, 226, 226);
+    border-radius: 3px;
+    font-family: nyt-franklin, helvetica, arial, sans-serif;
+    padding: 11px 15px 10px;
+    margin-top: 0.5em;
+    width: 100%;
+    color: rgb(102, 102, 102);
+    font-size: 13px;
+    height: 42px;
+    cursor: text;
+}
