@@ -75,12 +75,12 @@
           addFeaturedNews(headlines, nyt_response[article], toggleCommandPanel);
         } else {
           // Alternate between one with line and one without line
-          if (parseInt(article) % 5 === 0) {
+          if (parseInt(article) % 6 === 0) {
             addHeadLineNoLine(headlines, nyt_response[article], toggleCommandPanel);
-          } else if (parseInt(article) % 5 === 1) {
+          } else if (parseInt(article) % 6 === 1) {
             // Hold onto article so that we can display two things in one with line
             hold_article = article;
-          } else if (parseInt(article) % 5 === 2) {
+          } else if (parseInt(article) % 6 === 2) {
             // If the hold article is null here, then add as one with no line
             // But if not, then add as one with line
             if (hold_article === "") {
@@ -89,10 +89,10 @@
               addHeadLineWithLine(headlines, nyt_response[article], nyt_response[hold_article], toggleCommandPanel);
               hold_article = "";
             }
-          } else if (parseInt(article) % 5 === 3) {
+          } else if (parseInt(article) % 6 === 3) {
             // Hold onto article so that we can display two things in one with line in the center
             hold_article = article;
-          } else {
+          } else if (parseInt(article) % 6 === 4) {
             // If the hold article is empty here, then add as one with no line
             // But if not, then add as one with line
             if (hold_article === "") {
@@ -101,6 +101,14 @@
               addHeadLineCenterLine(headlines, nyt_response[article], nyt_response[hold_article], toggleCommandPanel);
               hold_article = "";
             }
+          } else {
+            // Add the articles to editorial
+            if (is_first_editorial) {
+              is_first_editorial = false;
+              addFeaturedEditorial(editorials, nyt_response[article], toggleCommandPanel);
+            } else {
+              addEditorial(editorials, nyt_response[article], toggleCommandPanel);
+            }
           }
         }
 
@@ -108,9 +116,9 @@
         // Add the articles to editorial
         if (is_first_editorial) {
           is_first_editorial = false;
-          addFeaturedEditorial(editorials, nyt_response[article]);
+          addFeaturedEditorial(editorials, nyt_response[article], toggleCommandPanel);
         } else {
-          addEditorial(editorials, nyt_response[article]);
+          addEditorial(editorials, nyt_response[article], toggleCommandPanel);
         }
       }
     }
