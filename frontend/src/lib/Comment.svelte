@@ -1,6 +1,5 @@
 <script lang="ts">
-    import type { comment } from "./CommentInterface";
-    let props: comment = $props();
+    let {props, updateCommentsHandler} = $props();
     let replyText: string = $state("");
 
     let replyFieldVisible = $state(false);
@@ -8,33 +7,35 @@
         replyFieldVisible = !replyFieldVisible;
     }
 
-    function postReply(e: SubmitEvent) {
+    async function postReply(e: SubmitEvent) {
         e.preventDefault();
         if (!replyText) return; // Reject null/empty comments
 
-        let now = new Date();
-        console.log({
-            id: "create on backend?",
-            username: "get on backend",
-            locale: "USA",
-            date: `${now.getMonth() + 1}/${now.getDate()}`,
-            content: replyText,
-            recommend: 0,
-            replyNum: 0,
-            articleId: props.articleId,
-            parent: props.id,
-        }); // Post to backend
-
+        try {
+            const res = await fetch("/api/comments", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    article_id: props.articleId,
+                    parent_id: props.id,
+                    text: replyText,
+                })
+            });
+            if (!res.ok) {
+                console.error("NetworkError" + res);
+                return;
+            }
+        } catch (error) {
+            console.error(error);
+            return;
+        }
         replyText = "";
         toggleReplyField();
+        updateCommentsHandler(props.articleId);
     }
 
-    function recommend() {
-        console.log({
-            ...props,
-            recommend: props.recommend + 1,
-        }); // Post to backend
-    }
 </script>
 
 <div id="comment">
@@ -47,7 +48,7 @@
     <p id="content">{props.content}</p>
     <div id="social">
         <button id="reply" onclick={toggleReplyField}>Reply</button>
-        <button id="recommend" onclick={recommend}><span>{props.recommend}</span> Recommend</button>
+        <button id="recommend">Recommend</button>
         <button id="share">Share</button>
     </div>
     <span id="num-reply">{props.replyNum} REPLIES</span>

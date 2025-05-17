@@ -10,25 +10,36 @@
   let commentSectionVisibility = $state({state: false});
   let commentProps = $state({
     articleId: "",
-    comments: [
-      {id:"1", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"Residents in Davis reported seeing the man, 21, pacing in a park not far from where one of the fatal stabbings occurred. The attacks left two men dead and one woman injured.", recommend:22, replyNum:14},
-      {id:"2", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"Two people have died and a third person has been wounded over the course of five days in Davis, Calif. The police said they were uncertain whether only one assailant was involved.", recommend:22, replyNum:14},
-      {id:"3", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"root", username:"trebor", locale:"USA", date:"May 15", content:"California College Town Rocked by Stabbings That Remain a Mystery", recommend:22, replyNum:14},
-      {id:"4", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"Jim Wilson/The New York Times", recommend:22, replyNum:14},
-      {id:"5", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"Saturday, May 17, 2025", recommend:22, replyNum:14},
-      {id:"6", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"1", username:"trebor", locale:"USA", date:"May 15", content:"SUBSCRIBE FOR $1/WEEK", recommend:22, replyNum:14},
-      {id:"7", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"4", username:"trebor", locale:"USA", date:"May 15", content:"inEducation", recommend:22, replyNum:14},
-      {id:"7", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"4", username:"trebor", locale:"USA", date:"May 15", content:"Former California Corrections Officer Admits Assaulting Inmates and Lying", recommend:22, replyNum:14},
-      {id:"7", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"5", username:"trebor", locale:"USA", date:"May 15", content:"Lorem Ipsum", recommend:22, replyNum:14},
-      {id:"7", articleId:"nyt://article/25b2c196-acc4-5190-825a-bc835b8fa5a4", parent:"5", username:"trebor", locale:"USA", date:"May 15", content:"I am trebor.", recommend:22, replyNum:14},
-    ]
+    comments: []
   });
 
+  function updateComments(articleId: string) {
+    fetch('/api/comments?article_id=' + articleId)
+            .then(res => res.json())
+            .then(data => data.map(
+                    comment => {
+                      return {
+                        id: comment._id,
+                        articleId: comment.article_id,
+                        parent: comment.parent_id,
+                        locale: "USA",
+                        date: comment.created_at,
+                        content: comment.text,
+                        username: comment.user,
+                        replyNum: 0,
+                      }
+                    })
+            )
+            .then(data => {
+              commentProps.comments = data;
+            })
+            .catch(err => console.log(err));
+  }
+
   function toggleCommandPanel(ev: MouseEvent, articleId: string) {
-    commentProps.articleId = articleId;
-
     // Get comments from the backend and populate commentList here
-
+    commentProps.articleId = articleId;
+    updateComments(articleId);
     commentSectionVisibility.state = !commentSectionVisibility.state;
     ev.preventDefault();
   }
@@ -115,7 +126,7 @@
 <!-- Separated header for cleaner main -->
 <Header />
 
-<CommentPane bind:visibility={commentSectionVisibility} data={commentProps} />
+<CommentPane bind:visibility={commentSectionVisibility} data={commentProps} updateCommentsHandler={updateComments} />
 
 <main>
   <section id="news">

@@ -62,12 +62,14 @@ def get_comments():
 # MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
 # Sending Data from a Flask app to MongoDB Database: https://www.geeksforgeeks.org/sending-data-from-a-flask-app-to-mongodb-database/ 
 
-@app.route("/api/articles/<article_id>", methods=["GET"])
+@app.route("/api/articles/<path:article_id>", methods=["GET"])
 def get_article(article_id):
+    print(article_id)
     article = db.articles.find_one({"_id": article_id})
     if article:
         article["_id"] = str(article["_id"])
         return jsonify(article)
+    return jsonify([])
 
 # This code will allow a new comment or a new reply to the database. 
 # The database will have the id of the article, content of the comment, email, timestamp, and moderated comment.
@@ -80,7 +82,8 @@ def post_comment():
     data = request.get_json()
     comment = {
         "article_id": data["article_id"],
-        "user": request.user["email"],
+#         "user": request.user["email"],
+        "user": "test@test",
         "text": data["text"],
         "parent_id": data.get("parent_id", "root"),
         "created_at": datetime.now(timezone.utc),
