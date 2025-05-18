@@ -83,12 +83,14 @@ def get_comments():
 # MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
 # Sending Data from a Flask app to MongoDB Database: https://www.geeksforgeeks.org/sending-data-from-a-flask-app-to-mongodb-database/ 
 
-@app.route("/api/articles/<article_id>", methods=["GET"])
+@app.route("/api/articles/<path:article_id>", methods=["GET"])
 def get_article(article_id):
+    print(article_id)
     article = db.articles.find_one({"_id": article_id})
     if article:
         article["_id"] = str(article["_id"])
         return jsonify(article)
+    return jsonify([])
 
 # This code will allow a new comment or a new reply to the database. 
 # The database will have the id of the article, content of the comment, email, timestamp, and moderated comment.
@@ -101,7 +103,8 @@ def post_comment():
     data = request.get_json()
     comment = {
         "article_id": data["article_id"],
-        "user": request.user["email"],
+#         "user": request.user["email"],
+        "user": "test@test",
         "text": data["text"],
         "parent_id": data.get("parent_id", "root"),
         "created_at": datetime.now(timezone.utc),
@@ -111,7 +114,7 @@ def post_comment():
     comment["_id"] = str(result.inserted_id)
     return jsonify(comment), 201
 
-# This code will allow the moderater to delete a comment which should only be accessible by the moderators. 
+# This code will allow the moderator to delete a comment which should only be accessible by the moderators.
 # The code works by checking if the current user is a moderator, then updates the comment and returns message.
 # In order to understand MongoDB better we read up on the documentation given during lab.
 # MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
@@ -154,11 +157,8 @@ def save_article():
 
 
 # -------- Things to do still ------------
-
 # Add extra credit moderator redacted (if time) (Add as a if else statement in moderator route)
-
 # Add some more backend unit testing in app_test.py
-
 # ---------------------------------------
 
 @app.route("/test-mongo")

@@ -3,11 +3,14 @@
     flex-direction: column;
 }
 
+/* Show username to be bold */
 #username {
     font-weight: 700;
     font-family: nyt-franklin, helvetica, arial, sans-serif;
 }
 
+/* METADATA BEGIN */
+/* Contains date & location */
 #metadata {
     display: flex;
     flex-direction: row;
@@ -17,21 +20,25 @@
     margin-bottom: 5px;
 }
 
-#content {
-    color: rgb(51, 51, 51);
-    font-family: nyt-franklin, helvetica, arial, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    margin: 0;
-    overflow-wrap: break-word;
-}
-
 #metadata > .vline-light {
     height: 1em;
     margin: 0.3em 0.6em;
 }
+/* METADATA END */
 
+/* Style the content of comment */
+#content {
+    font-family: nyt-franklin, helvetica, arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: rgb(51, 51, 51);
+    margin: 0;
+    overflow-wrap: break-word;
+}
+
+/* SOCIAL BEGIN */
+/* Contains buttons such as reply, recommend, share, and delete */
 #social {
     display: flex;
     flex-direction: row;
@@ -53,22 +60,29 @@
     cursor: pointer;
 }
 
+/* Delete button gets special color. Only visible for moderator */
+#social > #moderate {
+    color: rgb(198, 59, 59);
+}
+/* SOCIAL END */
+
 #num-reply {
-    font-weight: 300;
-    font-size: 12px;
     color: rgb(136, 136, 136);
     font-family: nyt-franklin, helvetica, arial, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
 }
 
-#reply-field{
+#reply-field {
     border: 1px solid rgb(226, 226, 226);
     border-radius: 3px;
+    color: rgb(102, 102, 102);
     font-family: nyt-franklin, helvetica, arial, sans-serif;
+    font-size: 13px;
+    width: 100%;
+    height: 42px;
     padding: 11px 15px 10px;
     margin-top: 0.5em;
-    width: 100%;
-    color: rgb(102, 102, 102);
-    font-size: 13px;
-    height: 42px;
     cursor: text;
 }
+
