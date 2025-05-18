@@ -1,3 +1,8 @@
+/*
+ * Contains helper functions to add editorial articles
+ */
+
+
 import {addArticleLength, addLine, addTextElement, addImage, addCommentButton} from "./Utils";
 import type {NYTArticle} from "./NYTArticle";
 

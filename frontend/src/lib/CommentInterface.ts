@@ -1,4 +1,6 @@
-export interface comment {
+// This file contains what comment should have in the frontend side.
+
+export interface CommentInterface {
     id: string;
     username: string;
     locale: string;

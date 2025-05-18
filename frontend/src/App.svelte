@@ -7,12 +7,16 @@
   import type {NYTArticle} from "./lib/NYTArticle";
   import CommentPane from "./CommentPane.svelte";
 
+  // State to manage comment pane visibility
   let commentSectionVisibility = $state({state: false});
+
+  // State to manage comment pane content
   let commentProps = $state({
     articleId: "",
     comments: []
   });
 
+  // Fetch comments for the articleID from the backend and update commentProps state variable
   function updateComments(articleId: string) {
     fetch('/api/comments?article_id=' + articleId)
             .then(res => res.json())
@@ -52,6 +56,7 @@
     await load_articles();
   });
 
+  // Function to fetch and display articles from ny times
   async function load_articles(): Promise<void> {
     const data = await fetch('/api/news');
     if (!data.ok) {

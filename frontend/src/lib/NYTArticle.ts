@@ -1,3 +1,5 @@
+// This file contains what an article needs to be displayed in the frontend
+
 export interface NYTArticle {
     _id: string;
     web_url: string;

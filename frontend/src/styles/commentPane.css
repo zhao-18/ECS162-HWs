@@ -4,8 +4,47 @@
     top: 0;
     right: 0;
     z-index: 1;
-    -webkit-user-select: none;
-    user-select: none;
+}
+
+/* Hide the checkbox */
+#invokeCommentPane {
+    opacity: 0;
+    position: absolute;
+}
+
+/* Move and display the elements once it is being invoked */
+#invokeCommentPane:checked ~ #comments {
+    transform: none;
+}
+
+#invokeCommentPane:checked ~ #overlay {
+    display: initial;
+}
+
+#overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 20%;
+    display: none;
+}
+
+/* Comment pane begin */
+#comments {
+    position: absolute;
+    width: 550px;
+    right: 0;
+    background: white;
+    list-style-type: none;
+    transform-origin: 0 0;
+    transform: translate(100%, 0);
+    transition: transform 0.2s ease-out;
+    height: 100vh;
+    overflow-y: scroll;
+    padding: 0 3em 0 3em;
 }
 
 #comment-heading {
@@ -51,45 +90,9 @@
 #comment-prompt > a {
     color: rgb(50, 104, 145);
 }
+/* Comment pane end */
 
-#invokeCommentPane {
-    opacity: 0;
-    position: absolute;
-}
-
-#comments {
-    position: absolute;
-    width: 550px;
-    right: 0;
-    background: white;
-    list-style-type: none;
-    transform-origin: 0 0;
-    transform: translate(100%, 0);
-    transition: transform 0.2s ease-out;
-    height: 100vh;
-    overflow-y: scroll;
-    padding: 0 3em 0 3em;
-}
-
-#invokeCommentPane:checked ~ #comments {
-    transform: none;
-}
-
-#invokeCommentPane:checked ~ #overlay {
-    display: initial;
-}
-
-#overlay {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    opacity: 20%;
-    display: none;
-}
-
+/* Reply styling begin */
 .reply-container {
     display: flex;
     flex-direction: row;
@@ -113,6 +116,7 @@
 #comment-container > .comment-container {
     padding-bottom: 2em;
 }
+/* Reply styling end */
 
 /* PHONE */
 @media only screen and (max-width: 550px) {

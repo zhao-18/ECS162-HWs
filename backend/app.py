@@ -93,14 +93,14 @@ def post_comment():
     comment["_id"] = str(result.inserted_id)
     return jsonify(comment), 201
 
-# This code will allow the moderater to delete a comment which should only be accessible by the moderators. 
+# This code will allow the moderator to delete a comment which should only be accessible by the moderators.
 # The code works by checking if the current user is a moderator, then updates the comment and returns message.
 # In order to understand MongoDB better we read up on the documentation given during lab.
 # MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
 # Sending Data from a Flask app to MongoDB Database: https://www.geeksforgeeks.org/sending-data-from-a-flask-app-to-mongodb-database/ 
 
-@app.route("/api/comments/<comment_id>/moderater", methods=["POST"])
-def moderater_comment(comment_id):
+@app.route("/api/comments/<comment_id>/moderator", methods=["POST"])
+def moderator_comment(comment_id):
     if not request.user["is_moderator"]:
         return jsonify({"error": "Unauthorized/Not Moderator"}), 400
     

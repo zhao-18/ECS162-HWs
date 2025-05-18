@@ -1,3 +1,7 @@
+/*
+ * Contains helper functions to add news articles
+ */
+
 import {addArticleLength, addLine, addTextElement, addImage, addCommentButton} from "./Utils";
 import type {NYTArticle} from "./NYTArticle";
 

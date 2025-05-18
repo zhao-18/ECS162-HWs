@@ -40,12 +40,15 @@ function addTextElement(parent: HTMLElement, elementType: string, text: string):
     return textElement
 }
 
+// Add button to show comment pane
+// Takes parent element and function that toggles command pane visibility
 function addCommentButton(parent: HTMLElement, toggle: ((ev: MouseEvent) => void)): void {
     const comment = document.createElement("button");
     comment.classList.add("commentVisibility");
     comment.onclick = toggle;
     parent.appendChild(comment);
 
+    // The chat icon
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute('width', '21');
     svg.setAttribute('height', '18');

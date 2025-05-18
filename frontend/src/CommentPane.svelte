@@ -1,29 +1,32 @@
 <script lang="ts">
-    import type {comment} from "./lib/CommentInterface";
+    import type {CommentInterface} from "./lib/CommentInterface";
     import Comment from "./lib/Comment.svelte";
-    import {mount} from "svelte";
+    import {mount} from "svelte"; // To dynamically render comments and replies
 
-    interface CommentWithReply extends comment {
+    interface CommentWithReply extends CommentInterface {
         reply: CommentWithReply[];
     }
 
+    // Define what this component takes as prop
     interface CommentProps {
         visibility: {
             state: boolean,
         };
         data: {
             articleId: string;
-            comments: comment[];
+            comments: CommentInterface[];
         }
         updateCommentsHandler: (articleId: string) => void;
     }
 
     let {visibility = $bindable(), data, updateCommentsHandler} : CommentProps = $props();
 
+    // Change visibility of the command pane
     function changeVisibility() {
         visibility.state = !visibility.state;
     }
 
+    // Handle posting comment to the backend
     async function postComment(e: SubmitEvent) {
         e.preventDefault();
         const userInput: HTMLInputElement | null = <HTMLInputElement>document.getElementById("comment-field");
@@ -54,8 +57,9 @@
         updateCommentsHandler(data.articleId);
     }
 
-    function createRelationship(flatComments: comment[]) : CommentWithReply[] {
-        const comments: CommentWithReply[] = flatComments.map((c: comment) => {
+    // Create nested relationship of parent comment and reply comment
+    function createRelationship(flatComments: CommentInterface[]) : CommentWithReply[] {
+        const comments: CommentWithReply[] = flatComments.map((c: CommentInterface) => {
             return {
                 ...c,
                 reply: []
@@ -68,7 +72,7 @@
                 if (parent !== null && parent !== undefined) {
                     parent.reply.push(comment);
                 } else {
-                    comment.parent = "root";
+                    comment.parent = "root"; // If parent comment is not found, the comment will be root
                 }
             }
         })
@@ -76,6 +80,7 @@
         return comments.filter(comment => comment.parent === "root");
     }
 
+    // Remove all of the existing comments and add the current comments
     function replaceComments(comments: CommentWithReply[]) {
         const container = document.getElementById("comment-container");
         if (!container) return;
@@ -88,6 +93,7 @@
         }
     }
 
+    // Helper function to recursively traverse replies and add them
     function addReplies(parent: HTMLElement, replies: CommentWithReply[]) {
         const container = document.createElement("div");
         container.classList.add("reply-container");
@@ -109,6 +115,7 @@
         }
     }
 
+    // Helper function to add comment component to the parent element using mount
     function addComment(parent: HTMLElement, comment: CommentWithReply) : HTMLElement {
         const commentContainer = document.createElement("div");
         commentContainer.classList.add("comment-container");
@@ -123,6 +130,7 @@
         return commentContainer;
     }
 
+    // Re-render all comments if anything in comment array changes
     $effect(() => {
         const comments: CommentWithReply[] = createRelationship(data.comments);
         // Count number of reply
@@ -132,20 +140,31 @@
 </script>
 
 <div id="comment-pane">
+<!--    Checkbox to control the visibility of the command pane-->
+<!--    Used this instead of if block from svelte to animate-->
     <input type="checkbox" id="invokeCommentPane" bind:checked={visibility.state}/>
+
+<!--    Overlay for the main area to focus on comment pane-->
     <div id="overlay" onclick={changeVisibility} onkeydown={_ => {}} role="button" tabindex="0"></div>
+
+<!--    Comment pane content-->
     <div id="comments">
         <div class="vspace"></div>
+
         <div id="comment-heading">
             <h1 id="comment-title">Comments</h1>
             <button onclick={changeVisibility} tabindex="0">&#x2715;</button>
         </div>
+
+<!--        Comment input field-->
         <form onsubmit={e => postComment(e)}>
             <input id="comment-field" type="text" placeholder="Share your thoughts.">
         </form>
+<!--        Prompt and space to separate-->
         <p id="comment-prompt">The Times needs your voice. We welcome your on-topic commentary, criticism and expertise. <a href="https://help.nytimes.com/hc/en-us/articles/115014792387-The-Comments-Section">Comments are moderated for civility.</a></p>
         <div class="hline-light-vspace"></div>
-        <div id="comment-container">
-        </div>
+
+        <div id="comment-container"></div>
     </div>
+
 </div>
