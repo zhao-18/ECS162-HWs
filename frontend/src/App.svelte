@@ -157,7 +157,7 @@
 <!-- Separated header for cleaner main -->
 <Header userInfo={user} updateUserInfo={userInfo} />
 
-<CommentPane bind:visibility={commentSectionVisibility} data={commentProps} updateCommentsHandler={updateComments} />
+<CommentPane bind:visibility={commentSectionVisibility} data={commentProps} updateCommentsHandler={updateComments} userInfo={user} />
 
 <main>
   <section id="news">

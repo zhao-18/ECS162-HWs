@@ -2,6 +2,7 @@
     import type {CommentInterface} from "./lib/CommentInterface";
     import Comment from "./lib/Comment.svelte";
     import {mount} from "svelte"; // To dynamically render comments and replies
+    import type {User} from "./lib/User";
 
     interface CommentWithReply extends CommentInterface {
         reply: CommentWithReply[];
@@ -17,9 +18,10 @@
             comments: CommentInterface[];
         }
         updateCommentsHandler: (articleId: string) => void;
+        userInfo: User;
     }
 
-    let {visibility = $bindable(), data, updateCommentsHandler} : CommentProps = $props();
+    let {visibility = $bindable(), data, updateCommentsHandler, userInfo} : CommentProps = $props();
 
     // Change visibility of the command pane
     function changeVisibility() {
@@ -123,7 +125,8 @@
             target: commentContainer,
             props: {
                 props: comment,
-                updateCommentsHandler
+                updateCommentsHandler,
+                userInfo
             }
         });
         parent.appendChild(commentContainer);

@@ -3,7 +3,7 @@
 
 <script lang="ts">
 
-    let {props, updateCommentsHandler} = $props();
+    let {props, updateCommentsHandler, userInfo} = $props();
 
     // States:
     //  - text that will be the reply of this comment
@@ -49,7 +49,18 @@
     }
 
     async function moderate() {
-        console.log("DELETE COMMENT WITH ID " + props.id);
+        if (userInfo.moderator) {
+            try {
+                await fetch("/api/comments/" + props.id + "/moderater", {
+                    method: "POST",
+                    headers: {}
+                })
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+            updateCommentsHandler(props.articleId);
+        }
     }
 </script>
 
@@ -70,7 +81,9 @@
         <button id="share">Share</button>
 
 <!--        Only show this element if the user is moderator-->
-        <button id="moderate" onclick={moderate}>Delete</button>
+        {#if userInfo.moderator}
+            <button id="moderate" onclick={moderate}>Delete</button>
+        {/if}
     </div>
 
     <span id="num-reply">{props.replyNum} REPLIES</span>
