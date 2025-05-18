@@ -65,7 +65,7 @@ def authorize():
     user = {
         "name": claims.get("name"),
         "email": claims.get("email"),
-        "moderator": claims.get("email") == "moderator@hw3.com"
+        "moderator": claims.get("email") == "moderator@hw3.com" or claims.get("email") == "admin@hw3.com"
     }
     session["user"] = user
     return redirect("http://localhost:5173/")
