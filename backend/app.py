@@ -57,7 +57,7 @@ def authorize():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/")
+    return redirect("http://localhost:5173/")
 
 # The code down below is a route that the frontend can use to help identify the user's info, email, and moderator role.
 

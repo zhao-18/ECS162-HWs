@@ -15,7 +15,7 @@
             {#if userInfo.email === "guest@ucdavis.edu"}
                 <a href="http://localhost:5556/auth?client_id=flask-app&redirect_uri=http://localhost:8000/authorize&response_type=code&scope=openid%20email%20profile">LOG IN</a>
             {:else}
-                <a onclick={logoutHandler} href="/">LOGOUT</a>
+                <a href="http://localhost:8000/logout">LOGOUT</a>
             {/if}
         </div>
     </div>
@@ -72,10 +72,6 @@
 
 <script lang="ts">
     let {userInfo, updateUserInfo} = $props();
-
-    async function logoutHandler() {
-        await updateUserInfo();
-    }
 
     function getCurrentDate(){
         const today = new Date();
