@@ -16,6 +16,27 @@ db = mongo.get_default_database()
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
 
+# The code down below should give us the info from the user. It will give the display name, email, and if they are a moderator. 
+# If they are a moderator it will be true or not then it will be false.
+# We needed to read up on dex documentation and the links from the lab.
+# Dex: https://dexidp.io/docs/ 
+# MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
+# Sending Data from a Flask app to MongoDB Database: https://www.geeksforgeeks.org/sending-data-from-a-flask-app-to-mongodb-database/ 
+
+@app.before_request
+def user():
+    request.user = {
+        "name": request.headers.get("X-User-Name", "Guest"),
+        "email": request.headers.get("X-User-Email", "guest@ucdavis.edu"),
+        "moderator": request.headers.get("X-User-Is-Moderator", "false") == "true"
+    }
+
+# The code down below is a route that the frontend can use to help identify the user's info, email, and moderator role.
+
+@app.route("/api/me")
+def get_me():
+    return jsonify(request.user)
+
 @app.route("/api/key")
 def get_key():
     return jsonify({"apiKey": os.getenv("NYT_API_KEY")})
@@ -98,7 +119,7 @@ def post_comment():
 
 @app.route("/api/comments/<comment_id>/moderater", methods=["POST"])
 def moderater_comment(comment_id):
-    if not request.user["is_moderator"]:
+    if not request.user["moderator"]:
         return jsonify({"error": "Unauthorized/Not Moderator"}), 400
     
     db.comments.update_one(
@@ -135,8 +156,6 @@ def save_article():
 # -------- Things to do still ------------
 
 # Add extra credit moderator redacted (if time) (Add as a if else statement in moderator route)
-
-# Add Dex authication and then clean up / simplify some MongoDB code (read up on dex documentation)
 
 # Add some more backend unit testing in app_test.py
 
