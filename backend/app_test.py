@@ -48,7 +48,78 @@ def test_news_content(client):
         if "uc davis" in abstract or "sacramento" in abstract:
             return 
     assert False, "No UC Davis or Sacramento in the articles"
-        
-        
+
+# The code down below is to test the /api/comments/<comment_id>/moderater route.
+# First it will create a comment, and then deleting it using the moderator permission. 
+# The code works by first making a POST to /api/comments to simulate a comment. THen a POST sent to /api/comments/<comment_id>/moderater to simulate deleting a comment.
+# Then it should show that the comment was deleted.          
+def test_moderator_delete(client):
+    article_id = "pytest-article"
+    post = client.post("/api/comments", json={
+        "article_id": article_id,
+        "text": "Delete me please",
+        "parent_id": "root"
+    }, headers={"X-User-Email": "pytest@test.com", "X-User-Is-Moderator": "true"})
+    comment = post.get_json()
+    comment_id = comment["_id"]
+    
+    res = client.post(f"/api/comments/{comment_id}/moderater", headers={
+        "X-User-Email": "pytest@test,com",
+        "X-User-Is-Moderator": "true"
+    })
+    assert res.status_code == 200
+    message = res.get_json()
+    assert message["message"] == "Comment deleted"  
+
+# The code down below is to test /api/comments route. 
+# The code should create a comment and then retrive that comment for the same article.    
+def test_get_comments(client):
+    article_id = "pytest-article"
+    post = client.post("/api/comments", json={
+        "article_id": article_id,
+        "text": "Comments",
+        "parent_id": "root"
+    }, headers={"X-User-Email": "pytest@test.com", "X-User-Is-Moderator": "true"})
+    
+    res = client.get(f"/api/comments?article_id={article_id}")
+    assert res.status_code == 200
+    comments = res.get_json()
+    assert isinstance(comments, list)
+    assert any(c["text"] == "Comments" for c in comments)
+
+# The code down below is to test if we can recover a saved article. 
+# The code works by saving an article via POST, then fetches it using GET to verify the data inside. 
+def test_get_article(client):
+    article_id = "https://www.nytimes.com/2023/05/04/us/davis-stabbings-aest-california.html"
+    client.post("/api/articles", json={
+        "url": article_id,
+        "headline": "Article",
+        "abstract": "Summary",
+        "byline": "Author"
+    })
+
+    res = client.get(f"/api/articles/{article_id}")
+    assert res.status_code == 200
+    article = res.get_json()
+    assert article["url"] == article_id
+    assert article["headline"] == "Article"
+    
+# The code down below is to test if a non-moderator cannot delete a comment.
+# The code posts a comment and then tries to delete it with a non-moderator, which should not work because only moderators are able to do that.
+def test_non_moderator_delete(client):
+    post = client.post("/api/comments", json={
+        "article_id": "dummy test",
+        "text": "No delete",
+        "parent_id": "root"
+    }, headers={"X-User-Email": "pytest@test.com", "X-User-Is-Moderator": "false"})
+    
+    comment_id = post.get_json()["_id"]
+    res = client.post(f"/api/comments/{comment_id}/moderater", headers={
+        "X-User-Is-Moderator": "false"
+    })
+    assert res.status_code == 400
+    assert res.get_json()["error"] == "Unauthorized/Not Moderator"
+
+      
     
 
