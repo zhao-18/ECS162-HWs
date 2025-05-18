@@ -16,6 +16,13 @@
     comments: []
   });
 
+  // Hold onto user information
+  let user = $state({
+    email: "guest@ucdavis.edu",
+    name: "Guest",
+    moderator: false
+  });
+
   // Fetch comments for the articleID from the backend and update commentProps state variable
   function updateComments(articleId: string) {
     fetch('/api/comments?article_id=' + articleId)
@@ -54,6 +61,7 @@
 
   onMount(async () => {
     await load_articles();
+    await userInfo();
   });
 
   // Function to fetch and display articles from ny times
@@ -134,10 +142,20 @@
       addHeadLineNoLine(headlines, nyt_response[hold_article], toggleCommandPanel);
     }
   }
+
+  // Get user info through backend
+  async function userInfo() {
+    const res = await fetch("/api/me");
+    if (!res.ok) {
+      console.error("NetworkError" + res);
+      throw Error("NetworkError" + res);
+    }
+    user = await res.json();
+  }
 </script>
 
 <!-- Separated header for cleaner main -->
-<Header />
+<Header userInfo={user} updateUserInfo={userInfo} />
 
 <CommentPane bind:visibility={commentSectionVisibility} data={commentProps} updateCommentsHandler={updateComments} />
 

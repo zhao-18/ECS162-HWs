@@ -103,8 +103,7 @@ def post_comment():
     data = request.get_json()
     comment = {
         "article_id": data["article_id"],
-#         "user": request.user["email"],
-        "user": "test@test",
+        "user": request.user["email"],
         "text": data["text"],
         "parent_id": data.get("parent_id", "root"),
         "created_at": datetime.now(timezone.utc),
