@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, send_from_directory, request, session, redirect
 import os
 from flask_cors import CORS
 import requests
@@ -16,20 +16,48 @@ db = mongo.get_default_database()
 app = Flask(__name__, static_folder="static", template_folder="templates")
 CORS(app)
 
-# The code down below should give us the info from the user. It will give the display name, email, and if they are a moderator. 
-# If they are a moderator it will be true or not then it will be false.
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "secret-dev-key")
+
+# The code down below should give us the info from the user. It checks if a user is already logged in by looking for their data.
+# If the user is found in the session, then it will set the user's name, email, and moderator status.
 # We needed to read up on dex documentation and the links from the lab.
 # Dex: https://dexidp.io/docs/ 
 # MongoDB in a Flask Application: https://www.digitalocean.com/community/tutorials/how-to-use-mongodb-in-a-flask-application 
 # Sending Data from a Flask app to MongoDB Database: https://www.geeksforgeeks.org/sending-data-from-a-flask-app-to-mongodb-database/ 
+# Flask documentation: https://flask.palletsprojects.com/en/stable/ 
 
 @app.before_request
 def user():
-    request.user = {
+    if "user" in session:
+        request.user = session["user"]
+    else:
+        request.user = {
+            "name": "Guest",
+            "email": "guest@ucdavis.edu",
+            "moderator": False
+        }
+
+# The code down below is a route that is called after the user logs in through Dex.
+# The code should work by getting the user's name, email, and moderator status from the headers.
+# Then it stores that information in the Flask session so that is is saved. Then it will go back to the homepage and showed that the user is logged in. 
+
+@app.route("/authorize")
+def authorize():
+    user = {
         "name": request.headers.get("X-User-Name", "Guest"),
         "email": request.headers.get("X-User-Email", "guest@ucdavis.edu"),
         "moderator": request.headers.get("X-User-Is-Moderator", "false") == "true"
     }
+    session["user"] = user
+    return redirect("/http://localhost:5173/")
+
+# The code down below is a route that is used when the user wants to logout. 
+# The code works by clearing out the session data, and then going back to the homepage.
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
 # The code down below is a route that the frontend can use to help identify the user's info, email, and moderator role.
 
@@ -153,12 +181,6 @@ def save_article():
 
     db.articles.replace_one({"_id": article["_id"]}, article, upsert=True)
     return jsonify({"message": "Article saved"}), 200
-
-
-# -------- Things to do still ------------
-# Add extra credit moderator redacted (if time) (Add as a if else statement in moderator route)
-# Add some more backend unit testing in app_test.py
-# ---------------------------------------
 
 @app.route("/test-mongo")
 def test_mongo():
