@@ -5,6 +5,7 @@ import requests
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime, timezone
+from jose import jwt
 
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
@@ -31,25 +32,43 @@ def user():
     if "user" in session:
         request.user = session["user"]
     else:
-        request.user = {
-            "name": "Guest",
-            "email": "guest@ucdavis.edu",
-            "moderator": False
-        }
+        request.user = None
 
 # The code down below is a route that is called after the user logs in through Dex.
-# The code should work by getting the user's name, email, and moderator status from the headers.
+# The code should work by getting the user's name, email, and moderator status from the token from Dex.
 # Then it stores that information in the Flask session so that is is saved. Then it will go back to the homepage and showed that the user is logged in. 
+# Authorization Code Flow: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow
+# JWT: https://jwt.io/introduction
+# Flask-OIDC: https://flask-oidc.readthedocs.io/en/latest/
 
 @app.route("/authorize")
 def authorize():
+    code = request.args.get("code")
+    token_url = os.getenv("OIDC_TOKEN_URL", "http://dex:5556/token")
+    client_id = os.getenv("OIDC_CLIENT_ID")
+    client_secret = os.getenv("OIDC_CLIENT_SECRET")
+    redirect_uri = "http://localhost:8000/authorize"
+
+    token_response = requests.post(token_url, data={
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": redirect_uri,
+        "client_id": client_id,
+        "client_secret": client_secret
+    })
+
+    token_data = token_response.json()
+    id_token = token_data["id_token"]
+    access_token = token_data["access_token"]
+    claims = jwt.decode(id_token, key='', options={"verify_signature": False}, audience="flask-app", access_token=access_token)
+    
     user = {
-        "name": request.headers.get("X-User-Name", "Guest"),
-        "email": request.headers.get("X-User-Email", "guest@ucdavis.edu"),
-        "moderator": request.headers.get("X-User-Is-Moderator", "false") == "true"
+        "name": claims.get("name"),
+        "email": claims.get("email"),
+        "moderator": claims.get("email") == "moderator@hw3.com"
     }
     session["user"] = user
-    return redirect("/http://localhost:5173/")
+    return redirect("http://localhost:5173/")
 
 # The code down below is a route that is used when the user wants to logout. 
 # The code works by clearing out the session data, and then going back to the homepage.
@@ -152,11 +171,27 @@ def moderater_comment(comment_id):
     if not request.user["moderator"]:
         return jsonify({"error": "Unauthorized/Not Moderator"}), 400
     
-    db.comments.update_one(
-        {"_id": ObjectId(comment_id)},
-        {"$set": {"text": "COMMENT REMOVED BY MODERATOR!", "moderated": True}}
+    data = request.get_json(silent=True) or {}
+    
+    if "redact_text" in data:
+        comment = db.comments.find_one({"_id": ObjectId(comment_id)})
+        redact_text = data["redact_text"]
+        full_block = "\u2588" * len(redact_text)
+        redacted_text = comment["text"].replace(redact_text, full_block)
+        db.comments.update_one(
+            {"_id": ObjectId(comment_id)},
+            {"$set": {"text": redacted_text, "moderated": True}}
     )
-    return jsonify({"message": "Comment deleted"}), 200
+        return jsonify({"message": "Comment redacted"}), 200
+    elif data == {}:
+        db.comments.update_one(
+            {"_id": ObjectId(comment_id)},
+            {"$set": {"text": "COMMENT REMOVED BY MODERATOR!", "moderated": True}}
+        )
+        return jsonify({"message": "Comment deleted"}), 200
+    
+    else:
+        return jsonify({"error": "Invalid request data"}), 400
 
 # The code will save an article to MongoDB. 
 # The code works by checking if there is an article url then builds the main componenets that we want to store in the database such as id, title, summary, url, author, and timestamp.
