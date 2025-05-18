@@ -48,6 +48,9 @@
         updateCommentsHandler(props.articleId);
     }
 
+    async function moderate() {
+        console.log("DELETE COMMENT WITH ID " + props.id);
+    }
 </script>
 
 <div id="comment">
@@ -65,7 +68,9 @@
         <button id="reply" onclick={toggleReplyField}>Reply</button>
         <button id="recommend">Recommend</button>
         <button id="share">Share</button>
-        <button id="moderate">Delete</button>
+
+<!--        Only show this element if the user is moderator-->
+        <button id="moderate" onclick={moderate}>Delete</button>
     </div>
 
     <span id="num-reply">{props.replyNum} REPLIES</span>
