@@ -13,7 +13,7 @@
         <div id="personalize">
             <a href="https://www.nytimes.com/subscription">SUBSCRIBE FOR $1/WEEK</a>
             {#if userInfo.email === "guest@ucdavis.edu"}
-                <a href="http://localhost:5556/auth?client_id=flask-app&redirect_uri=http://localhost:5173/&response_type=code&scope=openid%20email%20profile">LOG IN</a>
+                <a href="http://localhost:5556/auth?client_id=flask-app&redirect_uri=http://localhost:8000/authorize&response_type=code&scope=openid%20email%20profile">LOG IN</a>
             {:else}
                 <a onclick={logoutHandler} href="/">LOGOUT</a>
             {/if}
