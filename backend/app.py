@@ -178,10 +178,15 @@ def moderater_comment(comment_id):
         redact_text = data["redact_text"]
         full_block = "\u2588" * len(redact_text)
         redacted_text = comment["text"].replace(redact_text, full_block)
+
+        # if everything is blocked, swap to normal deleted message
+        if redacted_text.count("\u2588") == len(redacted_text):
+            redacted_text = "COMMENT REMOVED BY MODERATOR!"
+
         db.comments.update_one(
             {"_id": ObjectId(comment_id)},
             {"$set": {"text": redacted_text, "moderated": True}}
-    )
+        )
         return jsonify({"message": "Comment redacted"}), 200
     elif data == {}:
         db.comments.update_one(

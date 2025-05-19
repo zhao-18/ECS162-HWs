@@ -168,7 +168,7 @@ header > nav > ul {
 
 /* TABLET */
 @media only screen and (max-width: 950px) {
-    nav,
+    header > nav,
     #personalize,
     #search,
     #lang-content

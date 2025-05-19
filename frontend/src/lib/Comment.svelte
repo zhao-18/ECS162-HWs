@@ -53,7 +53,51 @@
             try {
                 await fetch("/api/comments/" + props.id + "/moderater", {
                     method: "POST",
-                    headers: {}
+                })
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+            updateCommentsHandler(props.articleId);
+        }
+    }
+
+    async function redactContent() {
+        // Do not moderate already moderated comment
+        if (props.content === "COMMENT REMOVED BY MODERATOR!") return;
+
+        // Get click location
+        const redact_range = document.getSelection()?.getRangeAt(0);
+        if (!redact_range) return;
+
+        let redact_text = "";
+        // Get words that was clicked on
+
+        // If startOffset and endOffset is different, we will censor the selection
+        if (redact_range.startOffset !== redact_range.endOffset) {
+            redact_text = props.content.substring(redact_range.startOffset, redact_range.endOffset);
+        } else {
+            // Count spaces before the index. The result will be the offset for the word that contain index
+            let word_offset = 0;
+            for (let i = 0; i < redact_range.startOffset; i++) {
+                if (props.content.charAt(i) == " ") {
+                    word_offset++;
+                }
+            }
+            // Get the word
+            redact_text = props.content.split(" ")[word_offset];
+        }
+
+        if (redact_text && userInfo.moderator) {
+            try {
+                await fetch("/api/comments/" + props.id + "/moderater", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        redact_text: redact_text
+                    })
                 })
             } catch (error) {
                 console.error(error);
@@ -73,7 +117,12 @@
         <span id="comment-date">{props.date}</span>
     </div>
 
-    <p id="content">{props.content}</p>
+    {#if userInfo.moderator}
+        <p id="content" onclick={redactContent}>{props.content}</p>
+    {:else}
+        <p id="content">{props.content}</p>
+    {/if}
+
 
     <div id="social">
         <button id="reply" onclick={toggleReplyField}>Reply</button>
