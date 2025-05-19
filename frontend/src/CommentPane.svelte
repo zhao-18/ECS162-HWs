@@ -79,6 +79,9 @@
             }
         })
 
+        // Count number of reply
+        comments.forEach(comment => comment.replyNum = comment.reply.length);
+
         return comments.filter(comment => comment.parent === "root");
     }
 
@@ -136,8 +139,6 @@
     // Re-render all comments if anything in comment array changes
     $effect(() => {
         const comments: CommentWithReply[] = createRelationship(data.comments);
-        // Count number of reply
-        comments.forEach(comment => comment.replyNum = comment.reply.length);
         replaceComments(comments);
     });
 </script>
