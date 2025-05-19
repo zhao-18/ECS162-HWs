@@ -1,0 +1,12 @@
+ https://github.com/zhao-18/ECS162-HWs
+
+ features:
+  Login by pressing the Log in button on right top
+  Log out by pressing the log out button on right top when logged in
+  Pull up the comment pane by clicking one of the comment button
+  Comment on article by typing in content in the field with "Share your thoughts." placeholder and press enter
+  Reply to a comment by clicking on Reply link below comment, type in the comment and press enter
+
+  Moderator:
+   Moderate comment by pressing Delete link below comment
+   Moderate word by clicking on the word or moderate section of comment by highlighting the part you wish to be deleted
