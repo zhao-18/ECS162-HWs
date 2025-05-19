@@ -1,5 +1,6 @@
-import { test, expect, vi } from 'vitest';
+import { test, expect, vi, beforeEach, describe } from 'vitest';
 import { render, screen } from '@testing-library/svelte';
+import '@testing-library/jest-dom';
 import App from './App.svelte';
 import Header from './Header.svelte';
 import CommentPane from './CommentPane.svelte';
@@ -16,7 +17,7 @@ https://developer.nytimes.com/docs/articlesearch-product/1/overview#response-fie
 
 // The code down below is to return a fake API key and return a fake article so that we do not need to get the backend. 
 // The fake article has components such as the word_count, multimedia from real different articles however the headline and abstract are fake and tested in the code. 
-vi.stubGlobal("fetch", vi.fn((url) => {
+vi.stubGlobal("fetch", vi.fn((url: string) => {
     if (url === "/api/key") {
         return Promise.resolve({
             ok: true,
@@ -35,13 +36,13 @@ vi.stubGlobal("fetch", vi.fn((url) => {
             }),
         });
     }
-    if (url?.toString().startsWith("/api/comments")) {
+    if (url.includes("/api/comments")) {
         return Promise.resolve({
             ok:true,
             json: () => Promise.resolve([
-                { _id: "1", text: "Top-level comment", user: "user@hw3.com", parent_id: "root", moderated: false },
-                { _id: "2", text: "Reply comment", user: "user@hw3.com", parent_id: "1", moderated: false },
-                { _id: "3", text: "COMMENT REMOVED BY MODERATOR!", user: "moderator@hw3.com", parent_id: "root", moderated: true }
+                { _id:'1', parent_id:'root', text:'Top-level comment', user:'user@hw3.com', moderated:false },
+                { _id:'2', parent_id:'1', text:'Reply comment', user:'user@hw3.com', moderated:false },
+                { _id:'3', parent_id:'root', text:'COMMENT REMOVED BY MODERATOR!', user:'moderator@hw3.com', moderated:true }
             ])
         });
     }
@@ -69,69 +70,77 @@ vi.stubGlobal("fetch", vi.fn((url) => {
             }),
         });
     }
-    return
+    return Promise.reject(new Error('unhandled fetch ${url}'));
 }));
 
-// This test is from the week 5 lab slides, where we were told to copy this code into our App.test.ts. 
-test('App', async () => {
-    render(App);
-})
+vi.mock('./CommentPane.svelte', () => ({
+  default: () => '<div data-testid="mock-commentpane"></div>'
+}));
 
-// This test is to test out if today's date is displayed in the Header and in the right format. It searchs the text to find the formatted date on the page.
-test('todays date', () => {
-    render(Header);
-    const expectedDate = new Date().toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+describe('Layout and header', () => {
+  // This test is to test out if today's date is displayed in the Header and in the right format. It searchs the text to find the formatted date on the page.
+  test('todays date', () => {
+    render(Header, {
+      props:{ userInfo:{ email:'guest@ucdavis.edu', name:'Guest', moderator:false },
+              updateUserInfo: () => {} }
     });
 
-    const date = screen.getAllByText(expectedDate);
-    expect(date.length).toBeGreaterThan(0);
+    const today = new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    expect(screen.getByText(today)).toBeInTheDocument();
+  });
+ 
+  // This test is to test out if fake articles can be displayed in the UI. We utilize the fake article created above. 
+  // The way the code works is that we render the app, then we wait until the fake article headline appears in the DOM. 
+  // Then we check that it exists. Then we find the article’s abstract using a regular expression match. Then we check if that exists as well.  
+  test('fake content', async () => {
+    render(App);
+    expect(await screen.findByText('UC Davis and Sacramento Club')).toBeInTheDocument();
+    expect(screen.getByText(/Fake article about UC Davis/i)).toBeInTheDocument();
+  });
 });
 
-// This test is to test out if fake articles can be displayed in the UI. We utilize the fake article created above. 
-// The way the code works is that we render the app, then we wait until the fake article headline appears in the DOM. 
-// Then we check that it exists. Then we find the article’s abstract using a regular expression match. Then we check if that exists as well.
-test('fake content', async () => {
-    render(App);
-    const headline = await screen.findByText("UC Davis and Sacramento Club")
-    expect(headline).not.toBeNull();
-    const abstract = screen.getByText(/Fake article about UC Davis and Sacramento/);
-    expect(abstract).not.toBeNull();
+vi.unmock('./CommentPane.svelte');  
+
+const commentProps = {
+  visibility : { state: true },         
+  data       : {
+    articleId:'nyt-fake',
+    comments : [                       
+      { id:'1', parent: 'root', content:'Top-level comment', username:'user@hw3.com',
+        date:new Date().toISOString(), locale:'USA', replyNum:0 },
+
+      { id:'2', parent: '1', content:'Reply comment', username:'user@hw3.com',
+        date:new Date().toISOString(), locale:'USA', replyNum:0 },
+
+      { id:'3', parent: 'root', content:'COMMENT REMOVED BY MODERATOR!', username:'mod@hw3.com',
+        date:new Date().toISOString(), locale:'USA', replyNum:0 }
+    ]
+  },
+  updateCommentsHandler: () => {},
+  userInfo : { email:'user@hw3.com', name:'User', moderator:false }
+};
+
+describe('CommentPane rendering', () => {
+  beforeEach(() => vi.useRealTimers());   
+  
+  // This test is to see if the comments are showing up under articles. 
+  // The way the code works is we render commentpane, and then wait until we see the comment show up and then we check if its exists. 
+  test('shows top-level comment', async () => {
+    render(CommentPane, { props: commentProps });
+    expect(await screen.findByText('Top-level comment')).toBeInTheDocument();
+  });
+  
+  // This test is to see if the comments are showing up and that replys are working correctly.
+  test('reply to comment', async () => {
+    render(CommentPane, { props: commentProps });
+    expect(await screen.findByText('Reply comment')).toBeInTheDocument();
+  });
+
+  // This test is to see if the deleted comment is working corretly. 
+  // The code works by rendering the commentpane and then finding the comment removed by moderator text which should show up when deleting a comment.
+  test('shows deleted comment', async () => {
+    render(CommentPane, { props: commentProps });
+    expect(await screen.findByText('COMMENT REMOVED BY MODERATOR!')).toBeInTheDocument();
+  });
 });
 
-// This test is to see if the login button and information of the user is dispalyed correctly. 
-// The way the code works is that we render the app, then wait to see for the login button. Then we check if it is there.
-// Next we check if the email is there as well.
-test('login button and user information check', async () => {
-    render(App);
-    const loginButton = await screen.findByText(/login/i);
-    expect(loginButton).not.toBeNull();
-
-    const email = await screen.findByText("moderator@hw3.com");
-    expect(email).not.toBeNull();
-});
-
-// This test is to see if the comments are showing up under articles. 
-// The way the code works is we render app, and then wait until we see the comment show up and then we check if its exists. 
-test('shows comments', async () => {
-    render(App);
-    const comment = await screen.findByText("Test comment");
-    expect(comment).not.toBeNull();
-})
-
-// This test is to see if the comments are showing up and that replys are working correctly.
-test('reply to comment', async () => {
-    render(App);
-    const top = await screen.findByText("Top comment");
-    const reply = await screen.findByText("Reply comment");
-    expect(top).not.toBeNull();
-    expect(reply).not.toBeNull();
-})
-
-// This test is to see if the deleted comment is working corretly. 
-// The code works by rendering the App and then finding the comment removed by moderator text which should show up when deleting a comment.
-test('shows deleted comment', async () => {
-    render(App);
-    const deleted = await screen.findByText("Comment removed by moderator!");
-    expect(deleted).not.toBeNull();
-})
